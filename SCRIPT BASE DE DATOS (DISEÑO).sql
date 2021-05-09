@@ -3,7 +3,7 @@
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
--- Author: Andrey Sancho
+-- Author: Grupo Proyecto
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`UsersAccounts` (
   `fechacreacion` DATETIME NOT NULL,
   `activo` BIT(1) NOT NULL,
   `generoid` TINYINT(4) NOT NULL,
-  INDEX `fk_UsersAccount_género1_idx` (`generoid` ASC) VISIBLE,
+  INDEX `fk_UsersAccount_género1_idx` (`generoid` ASC),
   PRIMARY KEY (`userid`),
   CONSTRAINT `fk_UsersAccount_género1`
     FOREIGN KEY (`generoid`)
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`PerfilBusqueda` (
   `generoid` TINYINT(4) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`perfilbusquedaid`),
-  INDEX `fk_PerfilBusqueda_géneros1_idx` (`generoid` ASC) VISIBLE,
-  INDEX `fk_PerfilBusqueda_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_PerfilBusqueda_géneros1_idx` (`generoid` ASC),
+  INDEX `fk_PerfilBusqueda_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_PerfilBusqueda_géneros1`
     FOREIGN KEY (`generoid`)
     REFERENCES `mydb`.`Generos` (`generoid`)
@@ -86,8 +86,8 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `mydb`.`UsersXIntereses` (
   `userid` INT(11) NOT NULL,
   `interesusuarioid` INT(11) NOT NULL,
-  INDEX `fk_UsersXIntereses_InteresesDeUsuario1_idx` (`interesusuarioid` ASC) VISIBLE,
-  INDEX `fk_UsersXIntereses_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_UsersXIntereses_InteresesDeUsuario1_idx` (`interesusuarioid` ASC),
+  INDEX `fk_UsersXIntereses_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_UsersXIntereses_InteresesDeUsuario1`
     FOREIGN KEY (`interesusuarioid`)
     REFERENCES `mydb`.`InteresesDeUsuario` (`interesusuarioid`)
@@ -104,8 +104,8 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `mydb`.`UsersXFotos` (
   `userid` INT(11) NOT NULL,
   `fotoid` INT(11) NOT NULL,
-  INDEX `fk_UsersXFotos_Fotos1_idx` (`fotoid` ASC) VISIBLE,
-  INDEX `fk_UsersXFotos_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_UsersXFotos_Fotos1_idx` (`fotoid` ASC),
+  INDEX `fk_UsersXFotos_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_UsersXFotos_Fotos1`
     FOREIGN KEY (`fotoid`)
     REFERENCES `mydb`.`Fotos` (`fotoid`)
@@ -122,8 +122,8 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `mydb`.`UsersXCategorias` (
   `userid` INT(11) NOT NULL,
   `categoriaid` INT(11) NOT NULL,
-  INDEX `fk_UsersXCategorias_Categorias1_idx` (`categoriaid` ASC) VISIBLE,
-  INDEX `fk_UsersXCategorias_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_UsersXCategorias_Categorias1_idx` (`categoriaid` ASC),
+  INDEX `fk_UsersXCategorias_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_UsersXCategorias_Categorias1`
     FOREIGN KEY (`categoriaid`)
     REFERENCES `mydb`.`Categorias` (`categoriaid`)
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Planes` (
   `titulo` VARCHAR(100) NOT NULL,
   `recurrencetypeid` INT(11) NOT NULL,
   PRIMARY KEY (`planid`),
-  INDEX `fk_Planes_RecurrencesTypes1_idx` (`recurrencetypeid` ASC) VISIBLE,
+  INDEX `fk_Planes_RecurrencesTypes1_idx` (`recurrencetypeid` ASC),
   CONSTRAINT `fk_Planes_RecurrencesTypes1`
     FOREIGN KEY (`recurrencetypeid`)
     REFERENCES `mydb`.`RecurrencesTypes` (`recurrencetypeid`)
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Beneficios` (
   `descripcion_beneficio` VARCHAR(200) NOT NULL,
   `planid` INT(11) NOT NULL,
   PRIMARY KEY (`beneficioid`),
-  INDEX `fk_Beneficios_Planes1_idx` (`planid` ASC) VISIBLE,
+  INDEX `fk_Beneficios_Planes1_idx` (`planid` ASC),
   CONSTRAINT `fk_Beneficios_Planes1`
     FOREIGN KEY (`planid`)
     REFERENCES `mydb`.`Planes` (`planid`)
@@ -188,8 +188,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`PlansxUser` (
   `planid` INT(11) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`planxuserid`),
-  INDEX `fk_PlansxUser_Planes1_idx` (`planid` ASC) VISIBLE,
-  INDEX `fk_PlansxUser_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_PlansxUser_Planes1_idx` (`planid` ASC),
+  INDEX `fk_PlansxUser_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_PlansxUser_Planes1`
     FOREIGN KEY (`planid`)
     REFERENCES `mydb`.`Planes` (`planid`)
@@ -220,10 +220,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Pagos` (
   `tipopagoid` TINYINT(4) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`pagoid`),
-  INDEX `fk_Pagos_EstadosDePagos1_idx` (`estadodepagoid` ASC) VISIBLE,
-  INDEX `fk_Pagos_Merchants1_idx` (`merchantid` ASC) VISIBLE,
-  INDEX `fk_Pagos_TiposPago1_idx` (`tipopagoid` ASC) VISIBLE,
-  INDEX `fk_Pagos_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_Pagos_EstadosDePagos1_idx` (`estadodepagoid` ASC),
+  INDEX `fk_Pagos_Merchants1_idx` (`merchantid` ASC),
+  INDEX `fk_Pagos_TiposPago1_idx` (`tipopagoid` ASC),
+  INDEX `fk_Pagos_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Pagos_EstadosDePagos1`
     FOREIGN KEY (`estadodepagoid`)
     REFERENCES `mydb`.`EstadosDePago` (`estadodepagoid`)
@@ -287,8 +287,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Traducciones` (
   `idiomaid` SMALLINT(6) NOT NULL,
   `contextoid` INT(11) NOT NULL,
   PRIMARY KEY (`traduccionid`),
-  INDEX `fk_Traducciones_Idiomas1_idx` (`idiomaid` ASC) VISIBLE,
-  INDEX `fk_Traducciones_Contexto1_idx` (`contextoid` ASC) VISIBLE,
+  INDEX `fk_Traducciones_Idiomas1_idx` (`idiomaid` ASC),
+  INDEX `fk_Traducciones_Contexto1_idx` (`contextoid` ASC),
   CONSTRAINT `fk_Traducciones_Idiomas1`
     FOREIGN KEY (`idiomaid`)
     REFERENCES `mydb`.`Idiomas` (`idiomaid`)
@@ -319,9 +319,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Bitacoras` (
   `ApliacionFuenteId` INT(11) NOT NULL,
   `TiposBitacoraId` INT(11) NOT NULL,
   PRIMARY KEY (`BitacoraId`),
-  INDEX `fk_Bitacora_Severidad1_idx` (`SeveridadId` ASC) VISIBLE,
-  INDEX `fk_Bitacora_EntityTypes1_idx` (`EntityTypesId` ASC) VISIBLE,
-  INDEX `fk_Bitacora_TiposBitacora1_idx` (`TiposBitacoraId` ASC) VISIBLE,
+  INDEX `fk_Bitacora_Severidad1_idx` (`SeveridadId` ASC),
+  INDEX `fk_Bitacora_EntityTypes1_idx` (`EntityTypesId` ASC),
+  INDEX `fk_Bitacora_TiposBitacora1_idx` (`TiposBitacoraId` ASC),
   CONSTRAINT `fk_Bitacora_Severidad1`
     FOREIGN KEY (`SeveridadId`)
     REFERENCES `mydb`.`Severidad` (`SeveridadId`)
@@ -370,7 +370,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`location` (
   `posttime` DATETIME NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`locationid`),
-  INDEX `fk_location_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_location_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_location_UsersAccounts1`
     FOREIGN KEY (`userid`)
     REFERENCES `mydb`.`UsersAccounts` (`userid`)
@@ -393,7 +393,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Contrasenas` (
   `actual` BIT(1) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`contraseñaid`),
-  INDEX `fk_Contraseñas_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_Contraseñas_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Contraseñas_UsersAccounts1`
     FOREIGN KEY (`userid`)
     REFERENCES `mydb`.`UsersAccounts` (`userid`)
@@ -419,10 +419,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transactions` (
   `transsubtypes` INT(11) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`Transactionid`),
-  INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC) VISIBLE,
-  INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC) VISIBLE,
-  INDEX `fk_Transactions_TransSubTypes1_idx` (`transsubtypes` ASC) VISIBLE,
-  INDEX `fk_Transactions_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC),
+  INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC),
+  INDEX `fk_Transactions_TransSubTypes1_idx` (`transsubtypes` ASC),
+  INDEX `fk_Transactions_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Transactions_contexts1`
     FOREIGN KEY (`contextid`)
     REFERENCES `mydb`.`Contexts` (`contextid`)
@@ -455,8 +455,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Acciones` (
   `tipoaccionid` TINYINT(4) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`accionid`),
-  INDEX `fk_Acciones_Tipoacciones1_idx` (`tipoaccionid` ASC) VISIBLE,
-  INDEX `fk_Acciones_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_Acciones_Tipoacciones1_idx` (`tipoaccionid` ASC),
+  INDEX `fk_Acciones_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Acciones_Tipoacciones1`
     FOREIGN KEY (`tipoaccionid`)
     REFERENCES `mydb`.`Tipoacciones` (`tipoaccionid`)
@@ -505,8 +505,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`LimitesXBeneficio` (
   `beneficioid` INT(11) NOT NULL,
   `limiteid` INT(11) NOT NULL,
   PRIMARY KEY (`limitexbeneficioid`),
-  INDEX `fk_LimitesXBeneficio_Beneficios1_idx` (`beneficioid` ASC) VISIBLE,
-  INDEX `fk_LimitesXBeneficio_Limites1_idx` (`limiteid` ASC) VISIBLE,
+  INDEX `fk_LimitesXBeneficio_Beneficios1_idx` (`beneficioid` ASC),
+  INDEX `fk_LimitesXBeneficio_Limites1_idx` (`limiteid` ASC),
   CONSTRAINT `fk_LimitesXBeneficio_Beneficios1`
     FOREIGN KEY (`beneficioid`)
     REFERENCES `mydb`.`Beneficios` (`beneficioid`)
@@ -533,7 +533,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`URLContraseñas` (
   `posttime` DATETIME NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`urlcontraseñaid`),
-  INDEX `fk_URLContraseñas_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_URLContraseñas_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_URLContraseñas_UsersAccounts1`
     FOREIGN KEY (`userid`)
     REFERENCES `mydb`.`UsersAccounts` (`userid`)
@@ -545,8 +545,8 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `mydb`.`CategoriasXBusquedas` (
   `categoriaid` INT(11) NOT NULL,
   `perfilbusquedaid` INT(11) NOT NULL,
-  INDEX `fk_CategoriasXBusquedas_Categorias1_idx` (`categoriaid` ASC) VISIBLE,
-  INDEX `fk_CategoriasXBusquedas_PerfilBusqueda1_idx` (`perfilbusquedaid` ASC) VISIBLE,
+  INDEX `fk_CategoriasXBusquedas_Categorias1_idx` (`categoriaid` ASC),
+  INDEX `fk_CategoriasXBusquedas_PerfilBusqueda1_idx` (`perfilbusquedaid` ASC),
   CONSTRAINT `fk_CategoriasXBusquedas_Categorias1`
     FOREIGN KEY (`categoriaid`)
     REFERENCES `mydb`.`Categorias` (`categoriaid`)
@@ -566,7 +566,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Chats` (
   `enable` BIT(1) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`chatid`),
-  INDEX `fk_Chats_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_Chats_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Chats_UsersAccounts1`
     FOREIGN KEY (`userid`)
     REFERENCES `mydb`.`UsersAccounts` (`userid`)
@@ -582,7 +582,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Mensajes` (
   `Mensajescol` VARCHAR(45) NULL DEFAULT NULL,
   `chatid` INT(11) NOT NULL,
   PRIMARY KEY (`mensajeid`),
-  INDEX `fk_Mensajes_Chats1_idx` (`chatid` ASC) VISIBLE,
+  INDEX `fk_Mensajes_Chats1_idx` (`chatid` ASC),
   CONSTRAINT `fk_Mensajes_Chats1`
     FOREIGN KEY (`chatid`)
     REFERENCES `mydb`.`Chats` (`chatid`)
