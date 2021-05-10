@@ -187,6 +187,81 @@ BEGIN
 END //
 delimiter ;
 
+DROP PROCEDURE IF EXISTS InsertarEstadosPago;
+delimiter //
+
+CREATE PROCEDURE InsertarEstadosPago()
+BEGIN
+	INSERT INTO EstadosDePago(name_estado)
+    VALUES
+    ('Aceptado'),
+    ('Rechazado'),
+    ('En Tránsito');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarTipoPagos;
+delimiter //
+
+CREATE PROCEDURE InsertarTipoPagos()
+BEGIN
+	INSERT INTO TiposPago(name_tipopago)
+    VALUES
+    ('Crédito'),
+    ('Débito');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarMerchants;
+delimiter //
+
+CREATE PROCEDURE InsertarMerchants()
+BEGIN
+	INSERT INTO Merchants(name_merchant, URL, habilitado, iconoURL)
+    VALUES 
+    ('Paypal', 'www.paypal.com', 1, 'www.paypal.com/imageicon/'),
+    ('Wink', 'www.wink.com', 1, 'www.wink.com/imageicon/'),
+    ('ApplePay', 'www.ApplePay.com', 1, 'www.ApplePay.com/imageicon/'),
+    ('GooglePay', 'www.GooglePay.com', 1, 'www.GooglePay.com/imageicon/'),
+    ('BAC', 'www.Bac.com', 1, 'www.Bac.com/imageicon/'),
+    ('BN', 'www.BancoNacional.com', 1, 'www.BancoNacional.com/imageicon/');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarIntereses;
+delimiter //
+
+CREATE PROCEDURE InsertarIntereses()
+BEGIN
+	INSERT INTO InteresesDeUsuario(name_interes, deleted)
+    VALUES
+    ('Música', 0),
+    ('Películas', 0),
+    ('Anime', 0),
+    ('Manualidades', 0),
+    ('Ejercicio', 0),
+    ('Montañismo', 0),
+    ('Viajes', 0),
+    ('Cultura', 0),
+    ('Historia', 0),
+    ('Video Juegos', 0),
+    ('Comida', 0),
+    ('Diseño', 0),
+    ('Libros', 0),
+    ('DIY', 0),
+    ('Carros', 0),
+    ('TV', 0),
+    ('Tocar Música', 0),
+    ('Coser', 0),
+    ('Escribir', 0),
+    ('Bailar', 0),
+    ('Pintar', 0),
+    ('Teatro', 0),
+    ('Playa', 0),
+    ('Cocinar', 0);
+END //
+delimiter ;
+
 
 DROP PROCEDURE IF EXISTS Filldata;
 delimiter //
@@ -200,10 +275,12 @@ BEGIN
     CALL InsertarIdiomas();
 	CALL InsertarContextos();
 	CALL InsertarLocalizaciones();
-    
+    CALL InsertarEstadosPago();
+    CALL InsertarTipoPagos();
+    CALL InsertarMerchants();
+    CALL InsertarIntereses();
+
 END //
 delimiter ;
 
 CALL Filldata();
-
-
