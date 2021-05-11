@@ -1,9 +1,9 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-05-10 22:45
+-- Generated: 2021-05-11 15:01
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
--- Author: Andrey Sancho
+-- Author: Grupo Proyecto
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -160,14 +160,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Beneficios` (
   `beneficioid` INT(11) NOT NULL AUTO_INCREMENT,
   `name_beneficio` VARCHAR(100) NOT NULL,
   `descripcion_beneficio` VARCHAR(200) NOT NULL,
-  `planid` INT(11) NOT NULL,
-  PRIMARY KEY (`beneficioid`),
-  INDEX `fk_Beneficios_Planes1_idx` (`planid` ASC),
-  CONSTRAINT `fk_Beneficios_Planes1`
-    FOREIGN KEY (`planid`)
-    REFERENCES `mydb`.`Planes` (`planid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`beneficioid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -595,7 +588,26 @@ CREATE TABLE IF NOT EXISTS `mydb`.`AplicacionFuente` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+CREATE TABLE IF NOT EXISTS `mydb`.`BeneficiosXPlanes` (
+  `planid` INT(11) NOT NULL,
+  `beneficioid` INT(11) NOT NULL,
+  INDEX `fk_BeneficiosXPlanes_Planes1_idx` (`planid` ASC),
+  INDEX `fk_BeneficiosXPlanes_Beneficios1_idx` (`beneficioid` ASC),
+  CONSTRAINT `fk_BeneficiosXPlanes_Planes1`
+    FOREIGN KEY (`planid`)
+    REFERENCES `mydb`.`Planes` (`planid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_BeneficiosXPlanes_Beneficios1`
+    FOREIGN KEY (`beneficioid`)
+    REFERENCES `mydb`.`Beneficios` (`beneficioid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
