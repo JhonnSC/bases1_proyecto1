@@ -102,7 +102,7 @@ BEGIN
     ('Descarte'),
     ('Like'),
     ('Super Like'),
-    ('Mega Like');
+    ('Quitar Like');
 END //
 delimiter ;
 
@@ -262,6 +262,241 @@ BEGIN
 END //
 delimiter ;
 
+DROP PROCEDURE IF EXISTS InsertarRecurrences;
+delimiter //
+
+CREATE PROCEDURE InsertarRecurrences()
+BEGIN
+	INSERT INTO RecurrencesTypes(name_recurrence, periodoplan, datepart)
+    VALUES
+    ('Infinito', 0, 'null'),
+    ('Mensual', 1, 'mm'),
+    ('Anual', 1, 'yyyy'),
+    ('Trimestral', 3, 'mm'),
+    ('Semestral', '6', 'mm');
+END //
+delimiter ;
+
+
+DROP PROCEDURE IF EXISTS InsertarPlanes;
+delimiter //
+
+CREATE PROCEDURE InsertarPlanes()
+BEGIN
+	INSERT INTO Planes(description_plan, amount, starttime, endtime, activo, titulo, recurrencetypeid)
+    VALUES
+    ('Incluye 10 likes diarios no incluye Super Likes, no puede deshacer likes, incluye 100 descartes diarios', 0, CURDATE(), '2099-12-31', 1, 'Plan Gratis', 1),
+    ('Incluye 15 likes y 5 Super Likes diarios, puede deshacer 3 Likes al día e incluye descartes ilimitados', 1000, CURDATE(), '2099-12-31', 1, 'Plan Premium 1.0 (Mensual)', 2),
+	('Incluye 15 likes y 5 Super Likes diarios, puede deshacer 3 Likes al día e incluye descartes ilimitados', 10000, CURDATE(), '2099-12-31', 1, 'Plan Premium 1.0 (Anual)', 3),
+    ('Incluye 20 likes y 10 Super Likes diarios, puede deshacer 5 likes al día e incluye descartes ilimitados', 5000, CURDATE(), '2099-12-31', 1, 'Plan Premium 2.0 (Mensual)', 2),
+    ('Incluye 20 likes y 10 Super Likes diarios, puede deshacer 5 likes al día e incluye descartes ilimitados', 50000, CURDATE(), '2099-12-31', 1, 'Plan Premium 2.0 (Anual)', 3),
+    ('Incluye Likes y Super Likes ilimitados, puede deshacer hasta 10 likes al día e incluye descartes ilimitados', 10000, CURDATE(), '2099-12-31', 1, 'Plan Premium 3.0 (Mensual)', 2),
+	('Incluye Likes y Super Likes ilimitados, puede deshacer hasta 10 likes al día e incluye descartes ilimitados', 100000, CURDATE(), '2099-12-31', 1,'Plan Premium 3.0 (Anual)', 3),
+	('Incluye 15 Likes y 10 Super Likes, puede deshacer 3 Likes al día e incluye descartes ilimitados (SOLO POR TIMEPO LIMITADO)', 2000, CURDATE(), '2021-06-01', 1, 'Plan Oferta', 1);
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarBeneficios;
+delimiter //
+
+CREATE PROCEDURE InsertarBeneficios()
+BEGIN
+	INSERT INTO Beneficios(name_beneficio, descripcion_beneficio)
+    VALUES
+    ('Like', 'Permite hacerle like a otra persona'),
+    ('Super Like', 'Permite darle like a un usuario y notificarle al correo de ese usuario quien le dió like'),
+    ('Deshacer Like', 'Permite quitarle el like a una persona'),
+    ('Descartar Persona', 'Permite descartar a una persona y pasar a la siguiente');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarLimites;
+delimiter //
+
+CREATE PROCEDURE InsertarLimites()
+BEGIN 
+	INSERT INTO Limites (name_limite, cantidad)
+    VALUES
+    ('Infinitos', 1000000000),
+    ('Cero', 0),
+    ('Tres', 3),
+    ('Cinco', 5),
+    ('Diez', 10),
+    ('Quince', 15),
+    ('Veinte', 20),
+    ('Cincuenta', 50),
+    ('Cien', 100);
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarPlanBase;
+delimiter //
+
+CREATE PROCEDURE InsertarPlanBase()
+BEGIN
+	DECLARE done TINYINT DEFAULT FALSE;
+    DECLARE usuario INT;
+	DECLARE RecorrerUsuarios_aux CURSOR FOR
+    SELECT userid FROM UsersAccounts;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    OPEN RecorrerUsuarios_aux;
+    
+    
+    ciclo: LOOP
+    
+		FETCH RecorrerUsuarios_aux INTO usuario;
+		IF done THEN
+			LEAVE ciclo;
+		END IF;
+
+		SET @nexttime = (SELECT endtime FROM Planes WHERE planid=1);
+        INSERT INTO PlansxUser(PostTime, NextTime, actual, planid, userid)
+        VALUES
+        (CURDATE(), @nexttime, 1, 1, usuario);
+        
+    END LOOP;
+	CLOSE RecorrerUsuarios_aux;
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarTransTypes;
+delimiter //
+
+CREATE PROCEDURE InsertarTransTypes()
+BEGIN
+	INSERT INTO TransTypes(name_transtype)
+    VALUES
+	('Pagos'),
+    ('Acciones APP');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarContexts;
+delimiter //
+
+CREATE PROCEDURE InsertarContexts()
+BEGIN
+	INSERT INTO Contexts(name_context)
+    VALUES
+    ('Pagos'),
+    ('Acciones'),
+    ('Localizaciones'),
+    ('Fotos'),
+    ('Traducciones'),
+    ('Bitacora'),
+    ('Mensajes');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarCategorias;
+delimiter //
+
+CREATE PROCEDURE InsertarCategorias()
+BEGIN
+	INSERT INTO Categorias(name_categoria, deleted)
+    VALUES
+    ('Animales', 0),
+    ('Viaje', 0),
+    ('Atardecer', 0),
+    ('Vida Nocturna', 0),
+    ('Lujos', 0),
+    ('Moda', 0),
+    ('Arte', 0),
+    ('Anime', 0),
+    ('Abstracto', 0);
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarCategoriasXUsers;
+delimiter //
+
+CREATE PROCEDURE InsertarCategoriasXUsers()
+BEGIN
+	DECLARE done TINYINT DEFAULT FALSE;
+    DECLARE usuario INT;
+    DECLARE cat1 INT;
+    DECLARE cat2 INT;
+	DECLARE RecorrerUsuarios_aux2 CURSOR FOR
+    SELECT userid FROM UsersAccounts;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    OPEN RecorrerUsuarios_aux2;
+    
+    
+    ciclo: LOOP
+    
+		FETCH RecorrerUsuarios_aux2 INTO usuario;
+		IF done THEN
+			LEAVE ciclo;
+		END IF;
+
+		SET cat1 = FLOOR(1 + RAND()*9);
+        SET cat2 = FLOOR(1 + RAND()*9);
+        
+        IF cat1 = cat2 THEN
+			SET cat2 = FLOOR(1 + RAND()*9);
+		END IF;
+        
+        IF cat1 = cat2 THEN
+			SET cat1 = FLOOR(1 + RAND()*9);
+		END IF;
+	
+        INSERT INTO UsersXCategorias(userid, categoriaid)
+        VALUES
+        (usuario, cat1),
+        (usuario, cat2);
+    END LOOP;
+	CLOSE RecorrerUsuarios_aux2;
+
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarPerfilesBusqueda;
+delimiter //
+
+CREATE PROCEDURE InsertarPerfilesBusqueda()
+BEGIN
+	DECLARE done TINYINT DEFAULT FALSE;
+    DECLARE usuario INT;
+    DECLARE genero TINYINT;
+	DECLARE RecorrerUsuarios_aux3 CURSOR FOR
+    SELECT userid, generoid FROM UsersAccounts;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    OPEN RecorrerUsuarios_aux3;
+    
+    
+    ciclo: LOOP
+    
+		FETCH RecorrerUsuarios_aux3 INTO usuario, genero;
+		IF done THEN
+			LEAVE ciclo;
+		END IF;
+        
+        SET @min = (FLOOR(18 + RAND()*(26-18)));
+        SET @max = (FLOOR(45 + RAND()*(100-45)));
+        
+        IF genero = 1 THEN
+			SET @genero = 2;
+		END IF;
+        
+        IF genero = 2 THEN
+			SET @genero = 1;
+		END IF;
+        
+        INSERT INTO PerfilBusqueda(rangodeedadminimo, rangodedadmaximo, generoid, userid)
+        VALUES
+        (@min, @max, @genero, usuario);
+        
+    END LOOP;
+	CLOSE RecorrerUsuarios_aux3;
+
+
+
+END //
+delimiter ;
+
 
 DROP PROCEDURE IF EXISTS Filldata;
 delimiter //
@@ -279,8 +514,25 @@ BEGIN
     CALL InsertarTipoPagos();
     CALL InsertarMerchants();
     CALL InsertarIntereses();
-
+    CALL InsertarRecurrences();
+    CALL InsertarPlanes();
+    CALL InsertarBeneficios();
+    CALL InsertarLimites();
+    CALL InsertarPlanBase();
+    CALL InsertarTransTypes();
+    CALL InsertarContexts();
+    CALL InsertarCategorias();
+    CALL InsertarCategoriasXUsers();
+    CALL InsertarPerfilesBusqueda();
+    
 END //
 delimiter ;
 
 CALL Filldata();
+
+-- TRANSTYPES
+-- PAGOS Y culaquier otra cosa de la app
+-- contexts son las tablas
+-- se sa el refid para el id interno
+
+-- super likes notifica al correo quien dió like
