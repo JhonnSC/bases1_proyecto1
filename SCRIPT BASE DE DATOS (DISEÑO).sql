@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-05-11 15:01
+-- Generated: 2021-05-11 15:24
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Planes` (
   `amount` FLOAT(11) NOT NULL,
   `starttime` DATETIME NOT NULL,
   `endtime` DATETIME NOT NULL,
-  `enable` BIT(1) NOT NULL,
+  `activo` BIT(1) NOT NULL,
   `titulo` VARCHAR(100) NOT NULL,
   `recurrencetypeid` INT(11) NOT NULL,
   PRIMARY KEY (`planid`),
@@ -415,7 +415,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transactions` (
   `refId2` BIGINT(20) NULL DEFAULT NULL,
   `contextid` INT(11) NOT NULL,
   `transtypesid` INT(11) NOT NULL,
-  `transsubtypes` INT(11) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`Transactionid`),
   INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC),
@@ -610,4 +609,3 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
