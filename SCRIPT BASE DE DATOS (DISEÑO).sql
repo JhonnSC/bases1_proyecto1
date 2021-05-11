@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-05-10 21:24
+-- Generated: 2021-05-10 22:45
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`RecurrencesTypes` (
   `recurrencetypeid` INT(11) NOT NULL AUTO_INCREMENT,
   `name_recurrence` VARCHAR(100) NOT NULL,
   `periodoplan` INT(11) NOT NULL,
-  `datepart` VARCHAR(50) NOT NULL,
+  `datepart` VARCHAR(5) NOT NULL,
   PRIMARY KEY (`recurrencetypeid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
