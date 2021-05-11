@@ -1,9 +1,9 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-05-09 10:47
+-- Generated: 2021-05-10 21:24
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
--- Author: Grupo Proyecto
+-- Author: Andrey Sancho
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -314,14 +314,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Bitacoras` (
   `oldValue` NVARCHAR(200) NOT NULL,
   `newValue` NVARCHAR(200) NOT NULL,
   `cheksum` BINARY NOT NULL,
-  `SeveridadId` INT(11) NOT NULL,
-  `EntityTypesId` INT(11) NOT NULL,
-  `ApliacionFuenteId` INT(11) NOT NULL,
-  `TiposBitacoraId` INT(11) NOT NULL,
+  `SeveridadId` TINYINT(4) NOT NULL,
+  `EntityTypesId` TINYINT(4) NOT NULL,
+  `TiposBitacoraId` TINYINT(4) NOT NULL,
+  `AplicacionFuenteId` SMALLINT(6) NOT NULL,
   PRIMARY KEY (`BitacoraId`),
   INDEX `fk_Bitacora_Severidad1_idx` (`SeveridadId` ASC),
   INDEX `fk_Bitacora_EntityTypes1_idx` (`EntityTypesId` ASC),
   INDEX `fk_Bitacora_TiposBitacora1_idx` (`TiposBitacoraId` ASC),
+  INDEX `fk_Bitacoras_AplicacionFuente1_idx` (`AplicacionFuenteId` ASC),
   CONSTRAINT `fk_Bitacora_Severidad1`
     FOREIGN KEY (`SeveridadId`)
     REFERENCES `mydb`.`Severidad` (`SeveridadId`)
@@ -336,26 +337,31 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Bitacoras` (
     FOREIGN KEY (`TiposBitacoraId`)
     REFERENCES `mydb`.`TiposBitacora` (`TiposBitacoraId`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Bitacoras_AplicacionFuente1`
+    FOREIGN KEY (`AplicacionFuenteId`)
+    REFERENCES `mydb`.`AplicacionFuente` (`AplicacionFuenteId`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Severidad` (
-  `SeveridadId` INT(11) NOT NULL AUTO_INCREMENT,
+  `SeveridadId` TINYINT(4) NOT NULL,
   `nombre_severidad` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`SeveridadId`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`EntityTypes` (
-  `EntityTypesId` INT(11) NOT NULL AUTO_INCREMENT,
+  `EntityTypesId` TINYINT(4) NOT NULL,
   `nombre_entity` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`EntityTypesId`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`TiposBitacora` (
-  `TiposBitacoraId` INT(11) NOT NULL AUTO_INCREMENT,
+  `TiposBitacoraId` TINYINT(4) NOT NULL,
   `nombre_tipobitacora` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`TiposBitacoraId`))
 ENGINE = InnoDB
@@ -421,7 +427,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transactions` (
   PRIMARY KEY (`Transactionid`),
   INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC),
   INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC),
-  INDEX `fk_Transactions_TransSubTypes1_idx` (`transsubtypes` ASC),
   INDEX `fk_Transactions_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Transactions_contexts1`
     FOREIGN KEY (`contextid`)
@@ -431,11 +436,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transactions` (
   CONSTRAINT `fk_Transactions_TransTypes1`
     FOREIGN KEY (`transtypesid`)
     REFERENCES `mydb`.`TransTypes` (`transtypesid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Transactions_TransSubTypes1`
-    FOREIGN KEY (`transsubtypes`)
-    REFERENCES `mydb`.`TransSubTypes` (`transsubtypes`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Transactions_UsersAccounts1`
@@ -484,13 +484,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`TransTypes` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`TransSubTypes` (
-  `transsubtypes` INT(11) NOT NULL AUTO_INCREMENT,
-  `name_transsubtypes` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`transsubtypes`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
 CREATE TABLE IF NOT EXISTS `mydb`.`Limites` (
   `limiteid` INT(11) NOT NULL AUTO_INCREMENT,
   `name_limite` VARCHAR(100) NOT NULL,
@@ -500,11 +493,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`LimitesXBeneficio` (
-  `limitexbeneficioid` INT(11) NOT NULL AUTO_INCREMENT,
-  `name_limibene` VARCHAR(100) NOT NULL,
   `beneficioid` INT(11) NOT NULL,
   `limiteid` INT(11) NOT NULL,
-  PRIMARY KEY (`limitexbeneficioid`),
   INDEX `fk_LimitesXBeneficio_Beneficios1_idx` (`beneficioid` ASC),
   INDEX `fk_LimitesXBeneficio_Limites1_idx` (`limiteid` ASC),
   CONSTRAINT `fk_LimitesXBeneficio_Beneficios1`
@@ -595,6 +585,13 @@ CREATE TABLE IF NOT EXISTS `mydb`.`TiposPago` (
   `tipopagoid` TINYINT(4) NOT NULL AUTO_INCREMENT,
   `name_tipopago` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`tipopagoid`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`AplicacionFuente` (
+  `AplicacionFuenteId` SMALLINT(6) NOT NULL,
+  `nombre_aplicacion` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`AplicacionFuenteId`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
