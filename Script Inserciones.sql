@@ -262,6 +262,52 @@ BEGIN
 END //
 delimiter ;
 
+DROP PROCEDURE IF EXISTS InsertarInteresesXUsuario;
+delimiter //
+
+CREATE PROCEDURE InsertarInteresesXUsuario()
+BEGIN
+	DECLARE done TINYINT DEFAULT FALSE;
+    DECLARE usuario INT;
+    DECLARE inte1 INT;
+    DECLARE inte2 INT;
+    DECLARE inte3 INT;
+	DECLARE RecorrerUsuarios_aux5 CURSOR FOR
+    SELECT userid FROM UsersAccounts;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN RecorrerUsuarios_aux5;
+    
+    ciclo: LOOP
+		FETCH RecorrerUsuarios_aux5 INTO usuario;
+		IF done THEN
+			LEAVE ciclo;
+		END IF;
+
+		SET inte1 = FLOOR(1 + RAND()*9);
+        SET inte2 = FLOOR(1 + RAND()*9);
+        SET inte3 = FLOOR(1 + RAND()*9);
+        
+        IF inte1 = inte2 OR inte3 = inte1 THEN
+			SET inte1 = FLOOR(1 + RAND()*24);
+		END IF;
+        IF inte2 = inte1 OR inte3 = inte2 THEN
+			SET inte2 = FLOOR(1 + RAND()*24);
+		END IF;
+        IF inte3 = inte2 OR inte3 = inte1 THEN
+			SET inte3 = FLOOR(1 + RAND()*24);
+		END IF;
+	
+        INSERT INTO UsersXIntereses(userid, interesusuarioid)
+        VALUES
+        (usuario, inte1),
+        (usuario, inte2),
+        (usuario, inte3);
+    END LOOP;
+	CLOSE RecorrerUsuarios_aux5;
+END //
+delimiter ;
+
 DROP PROCEDURE IF EXISTS InsertarRecurrences;
 delimiter //
 
@@ -466,7 +512,6 @@ BEGIN
     
     OPEN RecorrerUsuarios_aux3;
     
-    
     ciclo: LOOP
     
 		FETCH RecorrerUsuarios_aux3 INTO usuario, genero;
@@ -491,9 +536,52 @@ BEGIN
         
     END LOOP;
 	CLOSE RecorrerUsuarios_aux3;
+END //
+delimiter ;
 
+DROP PROCEDURE IF EXISTS InsertarFotos;
+delimiter //
 
-
+CREATE PROCEDURE InsertarFotos()
+BEGIN
+	DECLARE done TINYINT DEFAULT FALSE;
+    DECLARE usuario INT;
+    DECLARE lat FLOAT;
+    DECLARE lon FLOAT;
+    DECLARE contador TINYINT;
+	DECLARE RecorrerUsuarios_aux4 CURSOR FOR
+    SELECT userid FROM UsersAccounts;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    SET contador = 1;
+    
+    OPEN RecorrerUsuarios_aux4;
+    
+    ciclo: LOOP
+    
+		FETCH RecorrerUsuarios_aux4 INTO usuario;
+		IF done THEN
+			LEAVE ciclo;
+		END IF;
+        
+			SET lat = (RAND()*90);
+            SET lon = (RAND()*180);
+            
+            IF RAND() < 0.5 THEN
+				SET lat = (lat*-1);
+			END IF;
+            
+            IF RAND() < 0.5 THEN
+				SET lon = (lon*-1);
+			END IF;
+            
+        INSERT INTO Fotos(URL, latitud_foto, longitud_foto, deleted, Fecha, userid)
+        VALUES
+        (CONCAT('www.Finder.com/FotosUsuarios/0', CAST(contador AS CHAR)), lat, lon, 0, CURDATE(), usuario);
+        SET contador = contador+1;
+        
+    END LOOP;
+	CLOSE RecorrerUsuarios_aux4;
 END //
 delimiter ;
 
@@ -514,6 +602,7 @@ BEGIN
     CALL InsertarTipoPagos();
     CALL InsertarMerchants();
     CALL InsertarIntereses();
+    CALL InsertarInteresesXUsuario();
     CALL InsertarRecurrences();
     CALL InsertarPlanes();
     CALL InsertarBeneficios();
@@ -524,15 +613,9 @@ BEGIN
     CALL InsertarCategorias();
     CALL InsertarCategoriasXUsers();
     CALL InsertarPerfilesBusqueda();
+    CALL InsertarFotos();
     
 END //
 delimiter ;
 
 CALL Filldata();
-
--- TRANSTYPES
--- PAGOS Y culaquier otra cosa de la app
--- contexts son las tablas
--- se sa el refid para el id interno
-
--- super likes notifica al correo quien dió like
