@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-05-11 15:01
+-- Generated: 2021-05-11 18:31
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -63,7 +63,14 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Fotos` (
   `longitud_foto` FLOAT(11) NULL DEFAULT NULL,
   `deleted` BIT(1) NOT NULL,
   `Fecha` DATETIME NOT NULL,
-  PRIMARY KEY (`fotoid`))
+  `userid` INT(11) NOT NULL,
+  PRIMARY KEY (`fotoid`),
+  INDEX `fk_Fotos_UsersAccounts1_idx` (`userid` ASC),
+  CONSTRAINT `fk_Fotos_UsersAccounts1`
+    FOREIGN KEY (`userid`)
+    REFERENCES `mydb`.`UsersAccounts` (`userid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -87,31 +94,13 @@ CREATE TABLE IF NOT EXISTS `mydb`.`UsersXIntereses` (
   `userid` INT(11) NOT NULL,
   `interesusuarioid` INT(11) NOT NULL,
   INDEX `fk_UsersXIntereses_InteresesDeUsuario1_idx` (`interesusuarioid` ASC),
-  INDEX `fk_UsersXIntereses_UsersAccounts1_idx` (`userid` ASC),
+  INDEX `fk_UsersXIntereses_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
   CONSTRAINT `fk_UsersXIntereses_InteresesDeUsuario1`
     FOREIGN KEY (`interesusuarioid`)
     REFERENCES `mydb`.`InteresesDeUsuario` (`interesusuarioid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_UsersXIntereses_UsersAccounts1`
-    FOREIGN KEY (`userid`)
-    REFERENCES `mydb`.`UsersAccounts` (`userid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`UsersXFotos` (
-  `userid` INT(11) NOT NULL,
-  `fotoid` INT(11) NOT NULL,
-  INDEX `fk_UsersXFotos_Fotos1_idx` (`fotoid` ASC),
-  INDEX `fk_UsersXFotos_UsersAccounts1_idx` (`userid` ASC),
-  CONSTRAINT `fk_UsersXFotos_Fotos1`
-    FOREIGN KEY (`fotoid`)
-    REFERENCES `mydb`.`Fotos` (`fotoid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_UsersXFotos_UsersAccounts1`
     FOREIGN KEY (`userid`)
     REFERENCES `mydb`.`UsersAccounts` (`userid`)
     ON DELETE NO ACTION
@@ -143,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Planes` (
   `amount` FLOAT(11) NOT NULL,
   `starttime` DATETIME NOT NULL,
   `endtime` DATETIME NOT NULL,
-  `enable` BIT(1) NOT NULL,
+  `activo` BIT(1) NOT NULL,
   `titulo` VARCHAR(100) NOT NULL,
   `recurrencetypeid` INT(11) NOT NULL,
   PRIMARY KEY (`planid`),
@@ -415,7 +404,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transactions` (
   `refId2` BIGINT(20) NULL DEFAULT NULL,
   `contextid` INT(11) NOT NULL,
   `transtypesid` INT(11) NOT NULL,
-  `transsubtypes` INT(11) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`Transactionid`),
   INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC),
