@@ -122,13 +122,13 @@ CREATE PROCEDURE obtenerPlan(
                 
                 -- SE INSERTA UN NUEVO PLAN A LA TABLA DE PLANES POR USUARIO
                 INSERT INTO PlansxUser(PostTime,NextTime,actual,planid,userid)  -- el plan se inserta como si fuera infinito
-                VALUES(CURDATE(),DATE_ADD(curdate(),INTERVAL tiempoPlan YEAR),
+                VALUES(CURDATE(),DATE_ADD(curdate(),INTERVAL 0 DAY),
                 1,REFPAGOID,IDUSUARIO);
                 
 		COMMIT;
         SET transaction_aux = transaction_aux-1;
         
-        SELECT periodoplan INTO  tipoPlan  FROM Planes  -- Se debe definir el tiempo que va a tardar el plan, para utilizarlo en la tabla de planes x usuario
+        SELECT periodoplan INTO  tiempoPlan  FROM Planes  -- Se debe definir el tiempo que va a tardar el plan, para utilizarlo en la tabla de planes x usuario
 		INNER JOIN RecurrencesTypes 
 		ON Planes.recurrencetypeid = RecurrencesTypes.recurrencetypeid
         WHERE planid= REFPAGOID;
@@ -158,10 +158,15 @@ DELIMITER ;
 
 CALL obtenerPlan(1000,'colones',1234,'Plan Premium 1.0 (Mensual)','Juan','Pérez','Paypal','Débito');
 CALL obtenerPlan(5000,'colones',1234,'Plan Premium 1.0 (Mensual)','Juan','Pérez','Paypal','Débito');
+CALL obtenerPlan(5000,'colones',1234,'Plan Premium 1.0 (Mensual)','Mónica','Guillamon','Paypal','Débito');
+CALL obtenerPlan(5000,'colones',1234,'Plan Premium 2.0 (Mensual)','Mónica','Guillamon','Paypal','Débito');
+CALL obtenerPlan(3000,'colones',1234,'Plan Premium 2.0 (Mensual)','Mónica','Guillamon','Paypal','Débito');
+CALL obtenerPlan(10000,'colones',1234,'Plan Premium 1.0 (Anual)','Juan','Pérez','Paypal','Débito');
 
+-- VERIFICACION DE ACCIONES EN LAS TABLAS
+ select * from PlansxUser;
  select * from Pagos;
-
-
+ select * from Transactions;
 
 
 -- -----------------------------------------------------------------------------------------------------
@@ -290,4 +295,28 @@ CALL likes('Cristian','Núñez','Mónica','Guillamon','Quitar Like');
 SELECT * FROM Acciones;
 SELECT * FROM Transactions;
 SELECT * FROM Chats;
+
+
+
+-- --------------------------------------------------------------------------------------
+-- QUERY LISTADO DE MONTOS Y PERSONAS (P16)
+
+-- HACER UN SELECT QUE BUSQUE LOS MONTOS QUE NO SE PUDIERON PAGAR, IMPRIMA EL NOMBRE Y EL MONTO, ADEMAS
+-- DEBE IMPRIMIR LA CATEGORIA(MES Y AÑO) 
+
+-- inserto un pago de prueba, con una fecha en otro mes
+INSERT INTO Pagos(posttime, amount_pago, currencysymbol, merchanttransnumber,`description`,
+referenceid, `timestamp`,username,`checksum`, estadodepagoid,merchantid,tipopagoid,userid)
+VALUES
+('2020-01-14 00:00:00' ,2000, 'colones' , 123,CONCAT('Pago del plan: ', 2), 
+2, CURDATE() ,'Cristian','a98s7d6s8f', 2, 1, 
+1, 4);
+        
+-- CATEGORIZA POR AÑO Y MES
+SELECT amount_pago Monto,username Usuario,posttime Fecha,YEAR(posttime) Año,MONTHNAME(posttime) Mes 
+FROM Pagos WHERE estadodepagoid=2
+ORDER BY año,MONTH(posttime);
+
+
+
 
