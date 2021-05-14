@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-05-11 18:31
+-- Generated: 2021-05-13 22:48
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`UsersXIntereses` (
   `userid` INT(11) NOT NULL,
   `interesusuarioid` INT(11) NOT NULL,
   INDEX `fk_UsersXIntereses_InteresesDeUsuario1_idx` (`interesusuarioid` ASC),
-  INDEX `fk_UsersXIntereses_UsersAccounts1_idx` (`userid` ASC) VISIBLE,
+  INDEX `fk_UsersXIntereses_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_UsersXIntereses_InteresesDeUsuario1`
     FOREIGN KEY (`interesusuarioid`)
     REFERENCES `mydb`.`InteresesDeUsuario` (`interesusuarioid`)
@@ -329,21 +329,21 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Severidad` (
-  `SeveridadId` TINYINT(4) NOT NULL,
+  `SeveridadId` TINYINT(4) NOT NULL AUTO_INCREMENT,
   `nombre_severidad` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`SeveridadId`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`EntityTypes` (
-  `EntityTypesId` TINYINT(4) NOT NULL,
+  `EntityTypesId` TINYINT(4) NOT NULL AUTO_INCREMENT,
   `nombre_entity` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`EntityTypesId`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`TiposBitacora` (
-  `TiposBitacoraId` TINYINT(4) NOT NULL,
+  `TiposBitacoraId` TINYINT(4) NOT NULL AUTO_INCREMENT,
   `nombre_tipobitacora` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`TiposBitacoraId`))
 ENGINE = InnoDB
@@ -406,8 +406,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transactions` (
   `transtypesid` INT(11) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`Transactionid`),
-  INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC),
-  INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC),
+  INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC) ,
+  INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC) ,
   INDEX `fk_Transactions_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Transactions_contexts1`
     FOREIGN KEY (`contextid`)
@@ -570,7 +570,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`AplicacionFuente` (
-  `AplicacionFuenteId` SMALLINT(6) NOT NULL,
+  `AplicacionFuenteId` SMALLINT(6) NOT NULL AUTO_INCREMENT,
   `nombre_aplicacion` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`AplicacionFuenteId`))
 ENGINE = InnoDB
