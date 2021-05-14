@@ -186,6 +186,7 @@ CREATE PROCEDURE likes(
         DECLARE typeAccionId TINYINT;
         DECLARE chequeo VARBINARY(480);
         DECLARE hayMatch INT DEFAULT NULL;  -- PARA SABER SI HAY MATCH ENTRE LOS USUARIOS
+        DECLARE hayChat INT DEFAULT NULL;  
         
        -- para manejar los errores 
         
@@ -239,16 +240,25 @@ CREATE PROCEDURE likes(
         
         -- PROCESO DE MATCH Y CHAT
         SET hayMatch=(SELECT accionid FROM Acciones WHERE userid=otroUsuarioId and otrousuario=ID_USUARIO);
+        SET hayChat=(SELECT chatid FROM Chats WHERE userid=otroUsuarioId and otrousuario_chat=ID_USUARIO);
         
         -- SE PREGUNTA POR EL TIPO DE ACCION A REALIZAR
         IF (tipoAccion='Like' OR tipoAccion='Super Like') THEN   -- SI ES UNA DE ESAS DOS ACCIONES, SE DEBE REVISAR SI HAY MATCH
 			IF (ISNULL(hayMatch)=FALSE) THEN  -- INDICA QUE HAY MATCH ENTRE LOS DOS USUARIOS, ENTONCES SE CREA EL CHAT
-			
-				INSERT INTO Chats(otrousuario_chat,`enable`,userid)
-				VALUES
-                (otroUsuarioId,1,ID_USUARIO),
-                (ID_USUARIO,1,otroUsuarioId);
-	    
+			    IF (ISNULL(hayChat)=FALSE) THEN
+                    UPDATE Chats SET `enable`=1 
+					WHERE otrousuario_chat=otroUsuarioId AND userid=ID_USUARIO;
+					
+					UPDATE Chats SET `enable`=1 
+					WHERE otrousuario_chat=ID_USUARIO AND userid=otroUsuarioId;
+				
+                ELSE
+					INSERT INTO Chats(otrousuario_chat,`enable`,userid)
+					VALUES
+					(otroUsuarioId,1,ID_USUARIO),
+					(ID_USUARIO,1,otroUsuarioId);
+                    
+				END IF;
 			END IF;
 		END  IF;
         
@@ -268,15 +278,14 @@ CREATE PROCEDURE likes(
 DELIMITER ;
 
 
-
-
 CALL likes('Juan','Pérez','Mónica','Guillamon','Like');
 CALL likes('Mónica','Guillamon','Juan','Pérez','Like');
-
 CALL likes('Juan','Pérez','Mónica','Guillamon','Quitar Like');
 
-CALL likes('Cristian','Núñez','Mónica','Guillamon','Like');
+CALL likes('Cristian','Núñez','Mónica','Guillamon','Super Like');
 CALL likes('Mónica','Guillamon','Cristian','Núñez','Like');
+CALL likes('Cristian','Núñez','Mónica','Guillamon','Quitar Like');
+
 -- Pruebas
 SELECT * FROM Acciones;
 SELECT * FROM Transactions;
