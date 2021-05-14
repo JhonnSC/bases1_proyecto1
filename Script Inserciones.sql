@@ -585,6 +585,125 @@ BEGIN
 END //
 delimiter ;
 
+DROP PROCEDURE IF EXISTS InsertarPlanesXBeneficios;
+delimiter //
+
+
+CREATE PROCEDURE InsertarPlanesXBeneficios()
+BEGIN 
+
+    DECLARE beneficio INT;
+    DECLARE maxbeneficio INT;
+    DECLARE plan INT;
+    
+    SET beneficio = 1;
+    SET plan = 1;
+    SET maxbeneficio = (SELECT MAX(beneficioid) FROM Beneficios);
+    ciclo: LOOP
+    
+		IF plan = (SELECT MAX(planid) FROM Planes)+1 THEN
+			LEAVE ciclo;
+		END IF;
+    
+		WHILE beneficio <= maxbeneficio DO
+		INSERT INTO BeneficiosXPlanes(planid, beneficioid)
+		VALUES 
+		(plan, beneficio);
+		SET beneficio = beneficio+1;
+        END WHILE;
+        
+        SET beneficio = 1;
+		SET plan = plan+1;
+        
+    END LOOP ciclo;
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarLimitesXBeneficio;
+delimiter //
+
+CREATE PROCEDURE InsertarLimitesXBeneficio()
+BEGIN
+	
+    DECLARE beneficio INT;
+    DECLARE maxbeneficio INT;
+    DECLARE limite INT;
+    
+    SET beneficio = 1;
+    SET limite = 1;
+    SET maxbeneficio = (SELECT MAX(beneficioid) FROM Beneficios);
+    ciclo: LOOP
+    
+		IF limite = (SELECT MAX(limiteid) FROM Limites)+1 THEN
+			LEAVE ciclo;
+		END IF;
+    
+		WHILE beneficio <= maxbeneficio DO
+		INSERT INTO LimitesXBeneficio(beneficioid, limiteid)
+		VALUES 
+		(beneficio, limite);
+		SET beneficio = beneficio+1;
+        END WHILE;
+        
+        SET beneficio = 1;
+		SET limite = limite+1;
+        
+    END LOOP ciclo;
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarTiposBitacora;
+delimiter //
+
+CREATE PROCEDURE InsertarTiposBitacora()
+BEGIN
+	INSERT INTO TiposBitacora(nombre_tipobitacora)
+    VALUES
+    ('Información'),
+    ('Error'),
+    ('Actualización');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarSeveridad;
+delimiter //
+
+CREATE PROCEDURE InsertarSeveridad()
+BEGIN
+	INSERT INTO Severidad(nombre_severidad)
+    VALUES
+    ('Leve'),
+    ('Moderado'),
+    ('Grave'),
+    ('Muy Grave');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarEntityTypes;
+delimiter //
+
+CREATE PROCEDURE InsertarEntityTypes()
+BEGIN
+	INSERT INTO EntityTypes(nombre_entity)
+    VALUES 
+    ('Usuario'),
+    ('Administrador'),
+    ('Desconocido');
+END //
+delimiter ;
+
+DROP PROCEDURE IF EXISTS InsertarAplicaciones;
+delimiter //
+
+CREATE PROCEDURE InsertarAplicaciones()
+BEGIN 
+	INSERT INTO AplicacionFuente(nombre_aplicacion)
+    VALUES
+    ('Aplicación Web'),
+    ('APlicación Móbil');
+END //
+delimiter ;
+
 
 DROP PROCEDURE IF EXISTS Filldata;
 delimiter //
@@ -614,6 +733,12 @@ BEGIN
     CALL InsertarCategoriasXUsers();
     CALL InsertarPerfilesBusqueda();
     CALL InsertarFotos();
+    CALL InsertarPlanesXBeneficios();
+    CALL InsertarLimitesXBeneficio();
+    CALL InsertarTiposBitacora();
+    CALL InsertarSeveridad();
+    CALL InsertarEntityTypes();
+    CALL InsertarAplicaciones();
     
 END //
 delimiter ;
