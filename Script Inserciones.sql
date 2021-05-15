@@ -807,7 +807,10 @@ BEGIN
     ('TRD-ENUS-92', 'Theatre', 22, 1, 16),
     ('TRD-ENUS-93', 'Beach', 23, 1, 16),
     ('TRD-ENUS-94', 'Cook', 24, 1, 16),
+<<<<<<< HEAD
     ('TRD-ENUS-95', 'Insertion', 4, 1, 10),
+=======
+>>>>>>> Manuel
     -- ESPAÑOL ESPAÑA
 	('TRD-ESESP-01', 'Inglés', 1, 2, 1),
     ('TRD-ESESP-02', 'Español', 2, 2, 1),
@@ -903,7 +906,10 @@ BEGIN
     ('TRD-ESESP-92', 'Teatro', 22, 2, 16),
     ('TRD-ESESP-93', 'Playa', 23, 2, 16),
     ('TRD-ESESP-94', 'Cocinar', 24, 2, 16),
+<<<<<<< HEAD
     ('TRD-ESESP-95', 'Inserción', 4, 2, 10),
+=======
+>>>>>>> Manuel
     -- ESPAÑOL COSTA RICA
     ('TRD-ESCRC-01', 'Inglés', 1, 3, 1),
     ('TRD-ESCRC-02', 'Español', 2, 3, 1),
@@ -999,7 +1005,10 @@ BEGIN
     ('TRD-ESCRC-92', 'Teatro', 22, 3, 16),
     ('TRD-ESCRC-93', 'Playa', 23, 3, 16),
     ('TRD-ESCRC-94', 'Cocinar', 24, 3, 16),
+<<<<<<< HEAD
     ('TRD-ESCRC-95', 'Inserción', 4, 3, 10),
+=======
+>>>>>>> Manuel
 	-- FRANCÉS FRANCIA
 	('TRD-FRFR-01', 'Anglais', 1, 4, 1),
     ('TRD-FRFR-02', 'Espanol', 2, 4, 1),
@@ -1094,8 +1103,12 @@ BEGIN
     ('TRD-FRFR-91', 'Peindre', 21, 4, 16),
     ('TRD-FRFR-92', 'Théâtre', 22, 4, 16),
     ('TRD-FRFR-93', 'Plage', 23, 4, 16),
+<<<<<<< HEAD
     ('TRD-FRFR-94', 'Cuisiner', 24, 4, 16),
     ('TRD-FRFR-95', 'Insertion', 4, 4, 10);
+=======
+    ('TRD-FRFR-94', 'Cuisiner', 24, 4, 16);
+>>>>>>> Manuel
 END //
 delimiter ;
 
