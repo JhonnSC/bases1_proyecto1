@@ -332,14 +332,14 @@ CREATE PROCEDURE InsertarPlanes()
 BEGIN
 	INSERT INTO Planes(description_plan, amount, starttime, endtime, activo, titulo, recurrencetypeid)
     VALUES
-    ('Incluye 10 likes diarios no incluye Super Likes, no puede deshacer likes, incluye 100 descartes diarios', 0, CURDATE(), '2099-12-31', 1, 'Plan Gratis', 1),
-    ('Incluye 15 likes y 5 Super Likes diarios, puede deshacer 3 Likes al día e incluye descartes ilimitados', 1000, CURDATE(), '2099-12-31', 1, 'Plan Premium 1.0 (Mensual)', 2),
-	('Incluye 15 likes y 5 Super Likes diarios, puede deshacer 3 Likes al día e incluye descartes ilimitados', 10000, CURDATE(), '2099-12-31', 1, 'Plan Premium 1.0 (Anual)', 3),
-    ('Incluye 20 likes y 10 Super Likes diarios, puede deshacer 5 likes al día e incluye descartes ilimitados', 5000, CURDATE(), '2099-12-31', 1, 'Plan Premium 2.0 (Mensual)', 2),
-    ('Incluye 20 likes y 10 Super Likes diarios, puede deshacer 5 likes al día e incluye descartes ilimitados', 50000, CURDATE(), '2099-12-31', 1, 'Plan Premium 2.0 (Anual)', 3),
-    ('Incluye Likes y Super Likes ilimitados, puede deshacer hasta 10 likes al día e incluye descartes ilimitados', 10000, CURDATE(), '2099-12-31', 1, 'Plan Premium 3.0 (Mensual)', 2),
-	('Incluye Likes y Super Likes ilimitados, puede deshacer hasta 10 likes al día e incluye descartes ilimitados', 100000, CURDATE(), '2099-12-31', 1,'Plan Premium 3.0 (Anual)', 3),
-	('Incluye 15 Likes y 10 Super Likes, puede deshacer 3 Likes al día e incluye descartes ilimitados (SOLO POR TIMEPO LIMITADO)', 2000, CURDATE(), '2021-06-01', 1, 'Plan Oferta', 1);
+    ('Incluye 10 likes diarios no incluye Super Likes, no puede deshacer likes, incluye 100 descartes diarios', 0, CURDATE(), '2099-12-31', 1, 'Plan_Gratis', 1),
+    ('Incluye 15 likes y 5 Super Likes diarios, puede deshacer 3 Likes al día e incluye descartes ilimitados', 1000, CURDATE(), '2099-12-31', 1, 'Plan_Premium_1.0_(Mensual)', 2),
+	('Incluye 15 likes y 5 Super Likes diarios, puede deshacer 3 Likes al día e incluye descartes ilimitados', 10000, CURDATE(), '2099-12-31', 1, 'Plan_Premium_1.0_(Anual)', 3),
+    ('Incluye 20 likes y 10 Super Likes diarios, puede deshacer 5 likes al día e incluye descartes ilimitados', 5000, CURDATE(), '2099-12-31', 1, 'Plan_Premium_2.0_(Mensual)', 2),
+    ('Incluye 20 likes y 10 Super Likes diarios, puede deshacer 5 likes al día e incluye descartes ilimitados', 50000, CURDATE(), '2099-12-31', 1, 'Plan_Premium_2.0_(Anual)', 3),
+    ('Incluye Likes y Super Likes ilimitados, puede deshacer hasta 10 likes al día e incluye descartes ilimitados', 10000, CURDATE(), '2099-12-31', 1, 'Plan_Premium_3.0_(Mensual)', 2),
+	('Incluye Likes y Super Likes ilimitados, puede deshacer hasta 10 likes al día e incluye descartes ilimitados', 100000, CURDATE(), '2099-12-31', 1,'Plan_Premium_3.0_(Anual)', 3),
+	('Incluye 15 Likes y 10 Super Likes, puede deshacer 3 Likes al día e incluye descartes ilimitados (SOLO POR TIMEPO LIMITADO)', 2000, CURDATE(), '2021-06-01', 1, 'Plan_Oferta', 1);
 END //
 delimiter ;
 
