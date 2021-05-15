@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-05-13 22:48
+-- Generated: 2021-05-15 15:52
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -295,7 +295,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Bitacoras` (
   `refId2` BIGINT(20) NULL DEFAULT NULL,
   `oldValue` NVARCHAR(200) NOT NULL,
   `newValue` NVARCHAR(200) NOT NULL,
-  `cheksum` BINARY NOT NULL,
+  `cheksum` VARBINARY(480) NOT NULL,
   `SeveridadId` TINYINT(4) NOT NULL,
   `EntityTypesId` TINYINT(4) NOT NULL,
   `TiposBitacoraId` TINYINT(4) NOT NULL,
@@ -406,8 +406,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transactions` (
   `transtypesid` INT(11) NOT NULL,
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`Transactionid`),
-  INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC) ,
-  INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC) ,
+  INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC),
+  INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC),
   INDEX `fk_Transactions_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Transactions_contexts1`
     FOREIGN KEY (`contextid`)
@@ -550,7 +550,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Mensajes` (
   `mensajeid` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `caption` VARCHAR(200) NOT NULL,
   `posttime` DATETIME NOT NULL,
-  `Mensajescol` VARCHAR(45) NULL DEFAULT NULL,
   `chatid` INT(11) NOT NULL,
   PRIMARY KEY (`mensajeid`),
   INDEX `fk_Mensajes_Chats1_idx` (`chatid` ASC),
@@ -598,4 +597,3 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
