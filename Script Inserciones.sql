@@ -660,10 +660,23 @@ CREATE PROCEDURE InsertarTiposBitacora()
 BEGIN
 	INSERT INTO TiposBitacora(nombre_tipobitacora)
     VALUES
-    ('Información'),
-    ('Error'),
-    ('Actualización'),
-    ('Inserción');
+    ('Login Usuario'),
+    ('Log out Usuario'),
+    ('Cambio Contraseña'),
+    ('Generación URL contraseña'),
+    ('Creación Chats'),
+    ('Mensaje'),
+    ('Registrar localización'),
+    ('Agregar Foto'),
+    ('Quitar Foto'),
+    ('Cambiar info Plan'),
+    ('Ingresar Limite Plan'),
+    ('Ingresar Beneficios Plan'),
+    ('Ingresar recurrencias'),
+    ('Registrar Pago'),
+    ('Registrar Transacción'),
+    ('Ingresar Merchant'),
+    ('Traducir');
 END //
 delimiter ;
 
@@ -674,10 +687,11 @@ CREATE PROCEDURE InsertarSeveridad()
 BEGIN
 	INSERT INTO Severidad(nombre_severidad)
     VALUES
-    ('Leve'),
-    ('Moderado'),
-    ('Grave'),
-    ('Muy Grave');
+    ('Información'),
+    ('Error'),
+    ('Actualización'),
+    ('Inserción'),
+    ('Borrado');
 END //
 delimiter ;
 
@@ -701,8 +715,23 @@ CREATE PROCEDURE InsertarAplicaciones()
 BEGIN 
 	INSERT INTO AplicacionFuente(nombre_aplicacion)
     VALUES
-    ('Aplicación Web'),
-    ('Aplicación Móbil');
+    ('Usuarios'),
+    ('Contraeñas'),
+    ('URL Contraseñas'),
+    ('Chats'),
+    ('Mensajes'),
+    ('Acciones'),
+    ('Localizaciones'),
+    ('Fotos'),
+    ('Planes'),
+    ('Limites'),
+    ('Beneficios'),
+    ('Recurrencias'),
+    ('Pagos'),
+    ('Transacciones'),
+    ('Merchants'),
+    ('Traducciones');
+    
 END //
 delimiter ;
 
@@ -755,16 +784,16 @@ BEGIN
     ('TRD-ENUS-40', 'Twenty', 7, 2, 9),
     ('TRD-ENUS-41', 'Fifty', 8, 2, 9),
     ('TRD-ENUS-42', 'One Hundred', 9, 2, 9),
-    ('TRD-ENUS-43', 'Information', 1, 2, 10),
-    ('TRD-ENUS-44', 'Error', 2, 2, 10),
-    ('TRD-ENUS-45', 'Update', 3, 2, 10),
-    ('TRD-ENUS-46', 'Light', 1, 2, 11),
-    ('TRD-ENUS-47', 'Moderate', 2, 2, 11),
-    ('TRD-ENUS-48', 'Serious', 3, 2, 11),
-    ('TRD-ENUS-49', 'Very Serious', 4, 2, 11),
-    ('TRD-ENUS-50', 'User', 1, 2, 12),
-    ('TRD-ENUS-51', 'Administrator', 2, 2, 12),
-    ('TRD-ENUS-52', 'Unknown', 3, 2, 12),
+	('TRD-ENUS-43', 'User Log in', 1, 1, 10),
+	('TRD-ENUS-44', 'User Log out', 2, 1, 10),
+    ('TRD-ENUS-45', 'Password Change', 3, 1, 10),
+    ('TRD-ENUS-46', 'URL generation', 4, 1, 10),
+    ('TRD-ENUS-47', 'Chat creation', 5, 1, 10),
+    ('TRD-ENUS-48', 'Message', 6, 1, 10),
+    ('TRD-ENUS-49', 'Register Location', 7, 1, 10),
+    ('TRD-ENUS-50', 'Add photo', 8, 1, 10),
+    ('TRD-ENUS-51', 'Delete photo', 9, 1, 10),
+    ('TRD-ENUS-52', 'Change Plan Information', 10, 1, 10),
 	('TRD-ENUS-53', 'Payments', 1, 2, 13),
     ('TRD-ENUS-54', 'APP Payments', 2, 2, 13),
     ('TRD-ENUS-55', 'Payments', 1, 2, 14),
@@ -807,10 +836,21 @@ BEGIN
     ('TRD-ENUS-92', 'Theatre', 22, 1, 16),
     ('TRD-ENUS-93', 'Beach', 23, 1, 16),
     ('TRD-ENUS-94', 'Cook', 24, 1, 16),
-<<<<<<< HEAD
-    ('TRD-ENUS-95', 'Insertion', 4, 1, 10),
-=======
->>>>>>> Manuel
+	('TRD-ENUS-95', 'Add limit to plan', 11, 1, 10),
+    ('TRD-ENUS-96', 'Add benefit to plan', 12, 1, 10),
+    ('TRD-ENUS-97', 'Add recurrence', 13, 1, 10),
+    ('TRD-ENUS-98', 'Register Payment', 14, 1, 10),
+    ('TRD-ENUS-99', 'Register Transaction', 15, 1, 10),
+    ('TRD-ENUS-100', 'Add Merchant', 16, 1, 10),
+    ('TRD-ENUS-101', 'Translate', 17, 1, 10),
+    ('TRD-ENUS-102', 'Information', 1, 1, 11),
+    ('TRD-ENUS-103', 'Error', 2, 1, 11),
+    ('TRD-ENUS-104', 'Update', 3, 1, 11),
+    ('TRD-ENUS-105', 'Insertion', 4, 1, 11),
+    ('TRD-ENUS-106', 'Delete', 5, 1, 11),
+    ('TRD-ENUS-107', 'User', 1, 1, 12),
+    ('TRD-ENUS-108', 'Administrator', 2, 1, 12),
+    ('TRD-ENUS-109', 'Unknown', 3, 1, 12),
     -- ESPAÑOL ESPAÑA
 	('TRD-ESESP-01', 'Inglés', 1, 2, 1),
     ('TRD-ESESP-02', 'Español', 2, 2, 1),
@@ -854,16 +894,16 @@ BEGIN
     ('TRD-ESESP-40', 'Veinte', 7, 2, 9),
     ('TRD-ESESP-41', 'Cincuenta', 8, 2, 9),
     ('TRD-ESESP-42', 'Cien', 9, 2, 9),
-    ('TRD-ESESP-43', 'Información', 1, 2, 10),
-    ('TRD-ESESP-44', 'Error', 2, 2, 10),
-    ('TRD-ESESP-45', 'Actualización', 3, 2, 10),
-    ('TRD-ESESP-46', 'Leve', 1, 2, 11),
-    ('TRD-ESESP-47', 'Moderado', 2, 2, 11),
-    ('TRD-ESESP-48', 'Grave', 3, 2, 11),
-    ('TRD-ESESP-49', 'Muy Grave', 4, 2, 11),
-    ('TRD-ESESP-50', 'Usuario', 1, 2, 12),
-    ('TRD-ESESP-51', 'Administrador', 2, 2, 12),
-    ('TRD-ESESP-52', 'Desconocido', 3, 2, 12),
+	('TRD-ESESP-43', 'Incio Sesión Usuario', 1, 2, 10),
+	('TRD-ESESP-44', 'Cerrar Sesión Usuario', 2, 2, 10),
+    ('TRD-ESESP-45', 'Cambio Contraseña', 3, 2, 10),
+    ('TRD-ESESP-46', 'Generación URL', 4, 2, 10),
+    ('TRD-ESESP-47', 'Cración Chats', 5, 2, 10),
+    ('TRD-ESESP-48', 'Mensaje', 6, 2, 10),
+    ('TRD-ESESP-49', 'Registrar Localización', 7, 2, 10),
+    ('TRD-ESESP-50', 'Agregar Foto', 8, 2, 10),
+    ('TRD-ESESP-51', 'Quitar Foto', 9, 2, 10),
+    ('TRD-ESESP-52', 'Cambiar Información de Plan', 10, 2, 10),
 	('TRD-ESESP-53', 'Pagos', 1, 2, 13),
     ('TRD-ESESP-54', 'Pagos APP', 2, 2, 13),
     ('TRD-ESESP-55', 'Pagos', 1, 2, 14),
@@ -906,10 +946,21 @@ BEGIN
     ('TRD-ESESP-92', 'Teatro', 22, 2, 16),
     ('TRD-ESESP-93', 'Playa', 23, 2, 16),
     ('TRD-ESESP-94', 'Cocinar', 24, 2, 16),
-<<<<<<< HEAD
-    ('TRD-ESESP-95', 'Inserción', 4, 2, 10),
-=======
->>>>>>> Manuel
+	('TRD-ESESP-95', 'Ingresar Limite de Plan', 11, 2, 10),
+    ('TRD-ESESP-96', 'Ingresar Beneficio de Plan', 12, 2, 10),
+    ('TRD-ESESP-97', 'Ingresar Recurrencias', 13, 2, 10),
+    ('TRD-ESESP-98', 'Registrar Pago', 14, 2, 10),
+    ('TRD-ESESP-99', 'Registrar Transacción', 15, 2, 10),
+    ('TRD-ESESP-100', 'Ingresar Merchant', 16, 2, 10),
+    ('TRD-ESESP-101', 'Traducir', 17, 2, 10),
+    ('TRD-ESESP-102', 'Información', 1, 2, 11),
+    ('TRD-ESESP-103', 'Error', 2, 2, 11),
+    ('TRD-ESESP-104', 'Actualización', 3, 2, 11),
+    ('TRD-ESESP-105', 'Inserción', 4, 2, 11),
+    ('TRD-ESESP-106', 'Borrado', 5, 2, 11),
+    ('TRD-ESESP-107', 'Usuario', 1, 2, 12),
+    ('TRD-ESESP-108', 'Adminitrador', 2, 2, 12),
+    ('TRD-ESESP-109', 'Desconocido', 3, 2, 12),
     -- ESPAÑOL COSTA RICA
     ('TRD-ESCRC-01', 'Inglés', 1, 3, 1),
     ('TRD-ESCRC-02', 'Español', 2, 3, 1),
@@ -953,16 +1004,16 @@ BEGIN
     ('TRD-ESCRC-40', 'Veinte', 7, 3, 9),
     ('TRD-ESCRC-41', 'Cincuenta', 8, 3, 9),
     ('TRD-ESCRC-42', 'Cien', 9, 3, 9),
-    ('TRD-ESCRC-43', 'Información', 1, 3, 10),
-    ('TRD-ESCRC-44', 'Error', 2, 3, 10),
-    ('TRD-ESCRC-45', 'Actualización', 3, 3, 10),
-    ('TRD-ESCRC-46', 'Leve', 1, 3, 11),
-    ('TRD-ESCRC-47', 'Moderado', 2, 3, 11),
-    ('TRD-ESCRC-48', 'Grave', 3, 3, 11),
-    ('TRD-ESCRC-49', 'Muy Grave', 4, 3, 11),
-    ('TRD-ESCRC-50', 'Usuario', 1, 3, 12),
-    ('TRD-ESCRC-51', 'Administrador', 2, 3, 12),
-    ('TRD-ESCRC-52', 'Desconocido', 3, 3, 12),
+	('TRD-ESCRC-43', 'Incio Sesión Usuario', 1, 3, 10),
+	('TRD-ESCRC-44', 'Cerrar Sesión Usuario', 2, 3, 10),
+    ('TRD-ESCRC-45', 'Cambio Contraseña', 3, 3, 10),
+    ('TRD-ESCRC-46', 'Generación URL', 4, 3, 10),
+    ('TRD-ESCRC-47', 'Cración Chats', 5, 3, 10),
+    ('TRD-ESCRC-48', 'Mensaje', 6, 3, 10),
+    ('TRD-ESCRC-49', 'Registrar Localización', 7, 3, 10),
+    ('TRD-ESCRC-50', 'Agregar Foto', 8, 3, 10),
+    ('TRD-ESCRC-51', 'Quitar Foto', 9, 3, 10),
+    ('TRD-ESCRC-52', 'Cambiar Información de Plan', 10, 3, 10),
 	('TRD-ESCRC-53', 'Pagos', 1, 3, 13),
     ('TRD-ESCRC-54', 'Pagos APP', 2, 3, 13),
     ('TRD-ESCRC-55', 'Pagos', 1, 3, 14),
@@ -1005,10 +1056,21 @@ BEGIN
     ('TRD-ESCRC-92', 'Teatro', 22, 3, 16),
     ('TRD-ESCRC-93', 'Playa', 23, 3, 16),
     ('TRD-ESCRC-94', 'Cocinar', 24, 3, 16),
-<<<<<<< HEAD
-    ('TRD-ESCRC-95', 'Inserción', 4, 3, 10),
-=======
->>>>>>> Manuel
+    ('TRD-ESCRC-95', 'Ingresar Limite de Plan', 11, 3, 10),
+    ('TRD-ESCRC-96', 'Ingresar Beneficio de Plan', 12, 3, 10),
+    ('TRD-ESCRC-97', 'Ingresar Recurrencias', 13, 3, 10),
+    ('TRD-ESCRC-98', 'Registrar Pago', 14, 3, 10),
+    ('TRD-ESCRC-99', 'Registrar Transacción', 15, 3, 10),
+    ('TRD-ESCRC-100', 'Ingresar Merchant', 16, 3, 10),
+    ('TRD-ESCRC-101', 'Traducir', 17, 3, 10),
+    ('TRD-ESCRC-102', 'Información', 1, 3, 11),
+    ('TRD-ESCRC-103', 'Error', 2, 3, 11),
+    ('TRD-ESCRC-104', 'Actualización', 3, 3, 11),
+    ('TRD-ESCRC-105', 'Inserción', 4, 3, 11),
+    ('TRD-ESCRC-106', 'Borrado', 5, 3, 11),
+    ('TRD-ESCRC-107', 'Usuario', 1, 3, 12),
+    ('TRD-ESCRC-108', 'Adminitrador', 2, 3, 12),
+    ('TRD-ESCRC-109', 'Desconocido', 3, 3, 12),
 	-- FRANCÉS FRANCIA
 	('TRD-FRFR-01', 'Anglais', 1, 4, 1),
     ('TRD-FRFR-02', 'Espanol', 2, 4, 1),
@@ -1052,16 +1114,16 @@ BEGIN
     ('TRD-FRFR-40', 'Vingt', 7, 4, 9),
     ('TRD-FRFR-41', 'Cinquante', 8, 4, 9),
     ('TRD-FRFR-42', 'Cent', 9, 4, 9),
-    ('TRD-FRFR-43', 'Informations', 1, 4, 10),
-    ('TRD-FRFR-44', 'Erreur', 2, 4, 10),
-    ('TRD-FRFR-45', 'Actualisation', 3, 4, 10),
-    ('TRD-FRFR-46', 'Bénin', 1, 4, 11),
-    ('TRD-FRFR-47', 'Modérer', 2, 4, 11),
-    ('TRD-FRFR-48', 'Grave', 3, 4, 11),
-    ('TRD-FRFR-49', 'Très Grave', 4, 4, 11),
-    ('TRD-FRFR-50', 'Utilisateur', 1, 4, 12),
-    ('TRD-FRFR-51', 'Administrateur', 2, 4, 12),
-    ('TRD-FRFR-52', 'étranger', 3, 4, 12),
+	('TRD-ESESP-43', 'Commencer la session', 1, 4, 10),
+	('TRD-ESESP-44', 'Fermer la session', 2, 4, 10),
+    ('TRD-ESESP-45', 'Changer le mot de passe', 3, 4, 10),
+    ('TRD-ESESP-46', 'Générer une URL', 4, 4, 10),
+    ('TRD-ESESP-47', 'Création de chat', 5, 4, 10),
+    ('TRD-ESESP-48', 'Message', 6, 4, 10),
+    ('TRD-ESESP-49', 'Enregistrer l`emplacement', 7, 4, 10),
+    ('TRD-ESESP-50', 'Ajouter une photo', 8, 4, 10),
+    ('TRD-ESESP-51', 'Retirer photo', 9, 4, 10),
+    ('TRD-ESESP-52', 'Modifier les informations du plan', 10, 4, 10),
 	('TRD-FRFR-53', 'Paiements', 1, 4, 13),
     ('TRD-FRFR-54', 'Paiements APP', 2, 4, 13),
     ('TRD-FRFR-55', 'Paiements', 1, 4, 14),
@@ -1103,12 +1165,22 @@ BEGIN
     ('TRD-FRFR-91', 'Peindre', 21, 4, 16),
     ('TRD-FRFR-92', 'Théâtre', 22, 4, 16),
     ('TRD-FRFR-93', 'Plage', 23, 4, 16),
-<<<<<<< HEAD
     ('TRD-FRFR-94', 'Cuisiner', 24, 4, 16),
-    ('TRD-FRFR-95', 'Insertion', 4, 4, 10);
-=======
-    ('TRD-FRFR-94', 'Cuisiner', 24, 4, 16);
->>>>>>> Manuel
+	('TRD-FRFR-95', 'Entrez la limite du plan', 11, 4, 10),
+    ('TRD-FRFR-96', 'Entrez la prestation du plan', 12, 4, 10),
+    ('TRD-FRFR-97', 'Entrer une récurrence ', 13, 4, 10),
+    ('TRD-FRFR-98', 'Enregistrer le paiement', 14, 4, 10),
+    ('TRD-FRFR-99', 'Enregistrer une transaction', 15, 4, 10),
+    ('TRD-FRFR-100', 'Entrez le marchand', 16, 4, 10),
+    ('TRD-FRFR-101', 'Traduire', 17, 4, 10),
+    ('TRD-FRFR-102', 'Informations', 1, 4, 11),
+    ('TRD-FRFR-103', 'Erreur', 2, 4, 11),
+    ('TRD-FRFR-104', 'Actualisation', 3, 4, 11),
+    ('TRD-FRFR-105', 'Insertion', 4, 4, 11),
+    ('TRD-FRFR-106', 'Effacé', 5, 4, 11),
+    ('TRD-FRFR-107', 'Utilisateur', 1, 4, 12),
+    ('TRD-FRFR-108', 'Administrateur', 2, 4, 12),
+    ('TRD-FRFR-109', 'étranger', 3, 4, 12);
 END //
 delimiter ;
 
