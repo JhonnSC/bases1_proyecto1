@@ -156,12 +156,12 @@ DELIMITER ;
 
 -- Pruebas
 
-CALL obtenerPlan(1000,'colones',1234,'Plan Premium 1.0 (Mensual)','Juan','Pérez','Paypal','Débito');
-CALL obtenerPlan(5000,'colones',1234,'Plan Premium 1.0 (Mensual)','Juan','Pérez','Paypal','Débito');
-CALL obtenerPlan(5000,'colones',1234,'Plan Premium 1.0 (Mensual)','Mónica','Guillamon','Paypal','Débito');
-CALL obtenerPlan(5000,'colones',1234,'Plan Premium 2.0 (Mensual)','Mónica','Guillamon','Paypal','Débito');
-CALL obtenerPlan(3000,'colones',1234,'Plan Premium 2.0 (Mensual)','Mónica','Guillamon','Paypal','Débito');
-CALL obtenerPlan(10000,'colones',1234,'Plan Premium 1.0 (Anual)','Juan','Pérez','Paypal','Débito');
+CALL obtenerPlan(1000,'colones',1234,'Plan_Premium_1.0_(Mensual)','Juan','Pérez','Paypal','Débito');
+CALL obtenerPlan(5000,'colones',1234,'Plan_Premium_1.0_(Mensual)','Juan','Pérez','Paypal','Débito');
+CALL obtenerPlan(5000,'colones',1234,'Plan_Premium_1.0_(Mensual)','Mónica','Guillamon','Paypal','Débito');
+CALL obtenerPlan(5000,'colones',1234,'Plan_Premium_2.0_(Mensual)','Mónica','Guillamon','Paypal','Débito');
+CALL obtenerPlan(3000,'colones',1234,'Plan_Premium_2.0_(Mensual)','Mónica','Guillamon','Paypal','Débito');
+CALL obtenerPlan(10000,'colones',1234,'Plan_Premium_1.0_(Anual)','Juan','Pérez','Paypal','Débito');
 
 -- VERIFICACION DE ACCIONES EN LAS TABLAS
  select * from PlansxUser;
@@ -171,6 +171,176 @@ CALL obtenerPlan(10000,'colones',1234,'Plan Premium 1.0 (Anual)','Juan','Pérez'
 
 -- -----------------------------------------------------------------------------------------------------
 -- SP TRANSACCIONAL DE ESCRITURA #2
+-- SE CREA UN SP TRANSACCIONAL QUE PERMITE REALIZAR CAMBIOS EN EL PERFIL,
+-- EL USUARIO PUEDE GENERAR UNA NUEVA CONTRASEÑA Y ACTUALIZARLA
+-- ADEMÁS, PERMITE QUE EL USUARIO  GENERE UNA NUEVA UBICACION 
+-- GUARDA LOS CAMBIOS EN BITACORA
+
+
+DROP PROCEDURE IF EXISTS CambiosCuenta
+
+DELIMITER //
+
+CREATE PROCEDURE CambiosCuenta(
+	
+    nomUsuario VARCHAR(100),
+    apellidoUsuario VARCHAR(100),
+    contraseña_AUX VARCHAR(100)
+    
+)
+	BEGIN
+		
+         DECLARE ID_USUARIO INT;
+         DECLARE entraURL INT;  -- para saber si el URL para cambiar la contraseña sirve o no
+         DECLARE URLcreado VARCHAR(128);
+         DECLARE antiguaContraseña varbinary(300);
+         DECLARE correoUsuario varchar(100);
+         DECLARE nuevaContraseña varbinary(300);
+         DECLARE refURL int;  -- guarda el id del URL insertado
+         DECLARE refCont int;  -- guarda el id de la ultima contrasena insertada
+         DECLARE chequeo1 VARBINARY(480); 
+         DECLARE chequeo2 VARBINARY(480); 
+         DECLARE transaction_aux TINYINT;
+		
+       -- para manejar los errores 
+        
+		DECLARE INVALID_DATA INT DEFAULT(54000);
+		
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			GET DIAGNOSTICS CONDITION 1 @err_no = MYSQL_ERRNO, @message = MESSAGE_TEXT;
+			IF (ISNULL(@message)) THEN -- para las excepciones forzadas
+				SET @message = 'La acción no se ha completado exitosamente';            
+			ELSE
+				SET @message = CONCAT('Internal error: ',@message);
+			END IF;
+			
+			IF transaction_aux > 0 THEN
+				ROLLBACK; -- si se produjo un error se deben retroceder los datos que se guardaron en la transacción
+			END IF;
+            
+			RESIGNAL SET MESSAGE_TEXT = @message;
+		END;
+
+		SET autocommit = 0;
+       
+
+        SELECT userid INTO ID_USUARIO FROM UsersAccounts
+        WHERE nombre=nomUsuario and apellido1= apellidoUsuario;
+        
+        SELECT email INTO correoUsuario FROM UsersAccounts  -- obtiene el correo del usuario
+        WHERE nombre=nomUsuario and apellido1= apellidoUsuario;
+        
+       
+       -- se crea un URL para que el usuario pueda cambiar la contraseña
+        SET URLcreado=CONCAT('www.cambioContra',nomUsuario,(RAND()*180));
+        
+        INSERT INTO URLContraseñas(URL,posttime,userid)
+        VALUES(URLcreado, CURDATE(),ID_USUARIO);
+        
+        SELECT urlcontraseñaid INTO refURL FROM URLContraseñas -- obtiene el id del registro insertado
+        WHERE URL=URLcreado and userid=ID_USUARIO;
+        
+        SET chequeo1=SHA2(CONCAT(correoUsuario, CURDATE(), nomUsuario, refURL), 256);
+
+        -- se revisa si el usuario logró ingresar al URL
+        -- (la simulacion se hará con un random, 1 indica que entró,0 indica que no)
+        
+        SET entraURL= round(rand());
+        SELECT entraURL;
+        IF (entraURL=0) THEN  -- indica que no entro, entonces no permite cambiar la contraseña(se sale)
+            
+            SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
+
+        END IF;
+        
+        
+        -- se guarda el valor de la antigua contraseña
+        SELECT contraseña INTO antiguaContraseña FROM Contrasenas  -- obtiene la actual contrasena del usuario
+        WHERE userid=ID_USUARIO and actual=1; 
+        
+        -- se modifica la contrase;a a cambiar, usando lo que el usuario ingresa
+         SET nuevaContraseña=CONCAT(correoUsuario,contraseña_AUX );
+        
+        -- si el URL entró, se procede a cambiar la contraseña
+        
+        START TRANSACTION;
+				SET transaction_aux = transaction_aux+1;
+                -- Quito la contraseña actual
+                UPDATE Contrasenas SET actual=0  -- se quita la contrasena actual
+				WHERE userid=ID_USUARIO and actual=1; 
+                
+                -- Agrego la nueva contraseña
+				INSERT INTO Contrasenas(contraseña,datetimecontraseña,actual,userid)
+                VALUES(SHA2(nuevaContraseña, 224) , CURDATE(), 1, ID_USUARIO);
+            
+                SELECT contraseña INTO nuevaContraseña FROM Contrasenas  -- obtiene la actual contrasena del usuario
+				WHERE userid=ID_USUARIO and actual=1; 
+                
+                SELECT contraseñaid INTO refCont FROM Contrasenas  -- obtiene el id del cambio de contrasena
+				WHERE userid=ID_USUARIO and actual=1; 
+                
+                SET chequeo2=SHA2(CONCAT(correoUsuario, CURDATE(), nomUsuario, refCont), 256);
+
+                -- Registro la generacion del URL y el cambio en bitácora
+                INSERT INTO Bitacoras(fecha,Descripcion,devicename,username,IP,refId1,oldValue,newValue,
+                cheksum,SeveridadId,EntityTypesId,TiposBitacoraId,AplicacionFuenteId)
+                VALUES
+                (CURDATE(),'Se genera URL de contraseña','Galaxi',nomUsuario,'172.16.0.0',refURL,
+                antiguaContraseña,nuevaContraseña,chequeo1,4,1,4,3), -- se inserta la accion realizada del URL
+                (CURDATE(),'Se modifica contraseña actual','Galaxi',nomUsuario,'172.16.0.0',refCont,
+                antiguaContraseña,nuevaContraseña,chequeo2,4,1,3,2), -- se inserta la accion de actualizacion en tabla contrasena
+                (CURDATE(),'Se cambia contraseña','Galaxi',nomUsuario,'172.16.0.0',refCont,
+                antiguaContraseña,nuevaContraseña,chequeo2,3,1,3,2);  -- se inserta la accion de cambio de contrasena
+                    
+		COMMIT;
+        
+   
+	END //
+
+DELIMITER ;
+
+CALL CambiosCuenta('Juan','Pérez',13098);
+
+SELECT * from URLContraseñas ;
+
+SELECT * from Contrasenas ;
+
+SELECT * from Bitacoras ;
+-- --------------------------------------------------------------------------------------
+-- QUERY LISTADO DE MONTOS Y PERSONAS (P16)
+
+-- HACER UN SELECT QUE BUSQUE LOS MONTOS QUE NO SE PUDIERON PAGAR, IMPRIMA EL NOMBRE Y EL MONTO, ADEMAS
+-- DEBE IMPRIMIR LA CATEGORIA(MES Y AÑO) 
+
+-- inserto un pago de prueba, con una fecha en otro mes
+INSERT INTO Pagos(posttime, amount_pago, currencysymbol, merchanttransnumber,`description`,
+referenceid, `timestamp`,username,`checksum`, estadodepagoid,merchantid,tipopagoid,userid)
+VALUES
+('2020-04-14 00:00:00' ,2000, 'colones' , 123,CONCAT('Pago del plan: ', 2), 
+2, CURDATE() ,'Cristian','a98s7d6s8f', 2, 1, 
+1, 4);
+        
+-- CATEGORIZA POR AÑO Y MES
+SELECT amount_pago Monto,username Usuario,posttime Fecha,YEAR(posttime) Año,MONTHNAME(posttime) Mes 
+FROM Pagos WHERE estadodepagoid=2
+ORDER BY año,MONTH(posttime);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- De prueba, ya no se usa
+
 DROP PROCEDURE IF EXISTS likes
 
 DELIMITER //
@@ -298,24 +468,8 @@ SELECT * FROM Chats;
 
 
 
--- --------------------------------------------------------------------------------------
--- QUERY LISTADO DE MONTOS Y PERSONAS (P16)
 
--- HACER UN SELECT QUE BUSQUE LOS MONTOS QUE NO SE PUDIERON PAGAR, IMPRIMA EL NOMBRE Y EL MONTO, ADEMAS
--- DEBE IMPRIMIR LA CATEGORIA(MES Y AÑO) 
 
--- inserto un pago de prueba, con una fecha en otro mes
-INSERT INTO Pagos(posttime, amount_pago, currencysymbol, merchanttransnumber,`description`,
-referenceid, `timestamp`,username,`checksum`, estadodepagoid,merchantid,tipopagoid,userid)
-VALUES
-('2020-01-14 00:00:00' ,2000, 'colones' , 123,CONCAT('Pago del plan: ', 2), 
-2, CURDATE() ,'Cristian','a98s7d6s8f', 2, 1, 
-1, 4);
-        
--- CATEGORIZA POR AÑO Y MES
-SELECT amount_pago Monto,username Usuario,posttime Fecha,YEAR(posttime) Año,MONTHNAME(posttime) Mes 
-FROM Pagos WHERE estadodepagoid=2
-ORDER BY año,MONTH(posttime);
 
 
 
