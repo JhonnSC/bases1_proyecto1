@@ -1,7 +1,26 @@
 const express = require('express')
 const app = express()
-const mysql = require('mysql')
+const mysql = require('mysql2')
 const morgan = require('morgan')
+
+
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '123456',
+    port: '3306',
+    database: 'mydb'
+})
+
+
+connection.connect(err =>{
+    if(err) {
+        throw err
+    }
+    console.log('Mysql conectado')
+})
+
 
 app.get("/", (req,res)=> {
     console.log("root route")
@@ -10,23 +29,8 @@ app.get("/", (req,res)=> {
 
 })
 
-app.get("/user/:id", (req,res) => {
-    console.log("Buscando user con la id:" + req.params.id)
-    const connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '123456',
-        port: '3306',
-        database: 'mydb'
-    })
-
-    connection.query("SELECT * FROM  UsersAccounts WHERE userid =1",(err,rows,fields)=>{
-        console.log('Sirvio esta vara')
-        res.json(rows)
-
-    })
-
-})
+const router = require("./routes/user")
+app.use(router)
 
 // crear 
 app.listen(5000,()=> {
