@@ -4,10 +4,15 @@ const mysql = require('mysql2')
 router.get("/user/:userid", (req,res) => {
     console.log("Buscando user con la id:" + req.params.userid)
     const userId = req.params.id
-    const queryString = 'SELECT * FROM UsersAccounts WHERE userid = 1'
+    const queryString = 'SELECT * FROM UsersAccounts WHERE userid = ?'
 
 
-    connection.query(queryString, [userId] ,(err,rows,fields)=>{
+    function uniruser(str,int){
+        str.concat(int)
+
+    }
+
+    connection.query(uniruser(queryString,userId),(err,rows,fields)=>{
         if(err){
             console.log('Failed to query'+ err)
             res.sendStatus(500)

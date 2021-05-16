@@ -3,7 +3,7 @@ const app = express()
 const mysql = require('mysql2')
 const morgan = require('morgan')
 
-
+app.use(express.static('./public'))
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -28,9 +28,10 @@ app.get("/", (req,res)=> {
 
 
 })
-
-const router = require("./routes/user")
+const router2= require("./routes/user")
+const router = require("./routes/Storeprocedures")
 app.use(router)
+app.use(router2)
 
 // crear 
 app.listen(5000,()=> {
