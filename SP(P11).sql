@@ -35,10 +35,7 @@ CREATE PROCEDURE likes(
         DECLARE TAccion varchar(50);
         DECLARE plan_actual INT;
         
-        DECLARE cuenta_1 INT;
-        DECLARE cuenta_2 INT;
-        DECLARE cuenta_3 INT;
-        DECLARE cuenta_4 INT;
+      
         DECLARE cuenta_v INT;
         
         DECLARE beneficio_aux INT;
@@ -59,8 +56,8 @@ CREATE PROCEDURE likes(
             
             IF bandera_error=1 THEN
 				SET @message = 'Ya se ha alcanzado el límite diario de esta acción';
-                
-			ELSE
+			END IF;
+			IF bandera_error=2 THEN
 				SET @message = 'Los datos ingresados son incorrectos';
                 
             END IF;
@@ -99,50 +96,14 @@ CREATE PROCEDURE likes(
 		
 	   SET plan_actual = (SELECT Planes.planid FROM Planes INNER JOIN PlansxUser ON Planes.planid=PlansxUser.planid WHERE (PlansxUser.userid=ID_USUARIO AND PlansxUser.actual=1));
        
-       SET cuenta_2 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=2 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
        
-	   SET cuenta_3 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=3 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
-       
-	   SET cuenta_4 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=4 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
-       
-       SET cuenta_1 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=1 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
-
-        IF typeAccionId=1 THEN
-			SET cuenta_v = cuenta_1;
-        END IF;
+        SET cuenta_v = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=typeAccionId AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
         
-        IF typeAccionId=2 THEN
-			SET cuenta_v = cuenta_2;
-        END IF;
-        
-        IF typeAccionId=3 THEN
-			SET cuenta_v = cuenta_3;
-        END IF;
-        
-        IF typeAccionId=4 THEN
-			SET cuenta_v = cuenta_4;
-        END IF;
-        
-        IF typeAccionId=1 THEN
-			SET beneficio_aux = 4;
-        END IF;
-        
-        IF typeAccionId=2 THEN
-			SET beneficio_aux = 1;
-        END IF;
-        
-        IF typeAccionId=3 THEN
-			SET beneficio_aux = 2;
-        END IF;
-        
-        IF typeAccionId=4 THEN
-			SET beneficio_aux = 3;
-        END IF;
-        
-        IF cuenta_v > (SELECT cantidad FROM Limites INNER JOIN BeneficiosXPlanes ON Limites.limiteid=BeneficiosXPlanes.limiteid WHERE planid=plan_actual AND beneficioid=beneficio_aux) THEN
+        IF cuenta_v > (SELECT cantidad FROM Limites INNER JOIN BeneficiosXPlanes ON Limites.limiteid=BeneficiosXPlanes.limiteid WHERE planid=plan_actual AND beneficioid=typeAccionId) THEN
             SET bandera_error = 1;
             SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
         END IF;
+        
         
         
         START TRANSACTION;
@@ -244,7 +205,7 @@ CREATE PROCEDURE AccionChat(
 		
         	
         START TRANSACTION;
-            select 2;
+            
 			-- SE PREGUNTA POR EL TIPO DE ACCION A REALIZAR
 				IF (tipoAccion='Like' OR tipoAccion='Super Like') THEN   -- SI ES UNA DE ESAS DOS ACCIONES, SE DEBE REVISAR SI HAY MATCH
 					
@@ -283,18 +244,18 @@ CREATE PROCEDURE AccionChat(
 						SET chatid2= (SELECT chatid FROM Chats WHERE otrousuario_chat=ID_USUARIO AND userid=otroUsuarioId);
 			
 			   END IF;
-               select 5;
+               
 			
               CALL REGISTRO(nomUser1, ApUser1,nomUser2, ApUser2,TAccion);
                
 		COMMIT;
         
-        select 6;
+        
         INSERT INTO Mensajes(caption,posttime,chatid)
 		VALUES
 		(CONCAT('Chat habilitado con',Nusuariobase),CURDATE(),chatid1),
 		(CONCAT('Chat habilitado con',NOtroUsuario),CURDATE(),chatid2);
-        select 7;
+        
         
 	END //
 
@@ -376,7 +337,7 @@ CREATE PROCEDURE REGISTRO(
         
         
         START TRANSACTION;
-			   select 3;
+			   
                -- Se agrega una foto para el chat de ambos usuarios
                INSERT INTO Fotos(URL,latitud_foto,longitud_foto,deleted,Fecha,userid)
                VALUES(CONCAT('www.fotochat',Nusuariobase),lat,lon,0,CURDATE(),ID_USUARIO); 
