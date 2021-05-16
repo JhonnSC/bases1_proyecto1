@@ -96,16 +96,13 @@ CREATE PROCEDURE likes(
 		
 	   SET plan_actual = (SELECT Planes.planid FROM Planes INNER JOIN PlansxUser ON Planes.planid=PlansxUser.planid WHERE (PlansxUser.userid=ID_USUARIO AND PlansxUser.actual=1));
        
-       
-        SET cuenta_v = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=typeAccionId AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
+       SET cuenta_v = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=typeAccionId AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
         
         IF cuenta_v > (SELECT cantidad FROM Limites INNER JOIN BeneficiosXPlanes ON Limites.limiteid=BeneficiosXPlanes.limiteid WHERE planid=plan_actual AND beneficioid=typeAccionId) THEN
             SET bandera_error = 1;
             SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
         END IF;
-        
-        
-        
+    
         START TRANSACTION;
             -- se inserta la accion
             INSERT INTO Acciones(otrousuario,posttime,IP,`checksum`,tipoaccionid,userid)
