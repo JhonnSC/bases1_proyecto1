@@ -22,10 +22,10 @@ CREATE PROCEDURE likes(
      tipoAccion varchar(50)
 )
 	BEGIN
-		DECLARE otroUsuarioId INT;
-        DECLARE ID_USUARIO INT;
-        DECLARE typeAccionId TINYINT;
-        DECLARE chequeo VARBINARY(480);
+		DECLARE otroUsuarioId INT DEFAULT NULL;
+        DECLARE ID_USUARIO INT DEFAULT NULL;
+        DECLARE typeAccionId TINYINT DEFAULT NULL;
+        DECLARE chequeo VARBINARY(480) DEFAULT NULL;
         DECLARE hayMatch INT DEFAULT NULL;  -- PARA SABER SI HAY MATCH ENTRE LOS USUARIOS
         DECLARE hayChat INT DEFAULT NULL;  
         DECLARE nomUser1 varchar(100);
@@ -33,6 +33,17 @@ CREATE PROCEDURE likes(
         DECLARE nomUser2 varchar(100);
         DECLARE ApUser2 varchar(100);
         DECLARE TAccion varchar(50);
+        DECLARE plan_actual INT;
+        
+        DECLARE cuenta_1 INT;
+        DECLARE cuenta_2 INT;
+        DECLARE cuenta_3 INT;
+        DECLARE cuenta_4 INT;
+        DECLARE cuenta_v INT;
+        
+        DECLARE beneficio_aux INT;
+        DECLARE bandera_error TINYINT;
+        
        -- para manejar los errores 
         
 		DECLARE INVALID_DATA INT DEFAULT(54000);
@@ -41,10 +52,18 @@ CREATE PROCEDURE likes(
 		BEGIN
 			GET DIAGNOSTICS CONDITION 1 @err_no = MYSQL_ERRNO, @message = MESSAGE_TEXT;
 			IF (ISNULL(@message)) THEN -- para las excepciones forzadas
-				SET @message = 'Error al realizar la accion';            
-			ELSE
+				SET @message = 'Error al realizar la accion';  
+            ELSE
 				SET @message = CONCAT('Internal error: ',@message);
 			END IF;
+            
+            IF bandera_error=1 THEN
+				SET @message = 'Ya se ha alcanzado el límite diario de esta acción';
+                
+			ELSE
+				SET @message = 'Los datos ingresados son incorrectos';
+                
+            END IF;
 			
 			ROLLBACK;  -- si se produjo un error se deben retroceder los datos que se guardaron en la transacción
 			
@@ -70,12 +89,63 @@ CREATE PROCEDURE likes(
        -- se averigua el ID del tipo de accion a realizar
        SELECT tipoaccionid INTO typeAccionId FROM Tipoacciones
        WHERE name_tipoaccion=tipoAccion;
-	
+	   
+       IF (ISNULL(ID_USUARIO) OR ISNULL(otroUsuarioId) OR ISNULL(typeAccionId) ) THEN
+            SET bandera_error = 2;
+            SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
+        END IF;
+        
        SET chequeo=SHA2(CONCAT(Nusuariobase, CURDATE(), NOtroUsuario, typeAccionId), 256);
 		
+	   SET plan_actual = (SELECT Planes.planid FROM Planes INNER JOIN PlansxUser ON Planes.planid=PlansxUser.planid WHERE (PlansxUser.userid=ID_USUARIO AND PlansxUser.actual=1));
+       
+       SET cuenta_2 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=2 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
+       
+	   SET cuenta_3 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=3 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
+       
+	   SET cuenta_4 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=4 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
+       
+       SET cuenta_1 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=1 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
+
+        IF typeAccionId=1 THEN
+			SET cuenta_v = cuenta_1;
+        END IF;
+        
+        IF typeAccionId=2 THEN
+			SET cuenta_v = cuenta_2;
+        END IF;
+        
+        IF typeAccionId=3 THEN
+			SET cuenta_v = cuenta_3;
+        END IF;
+        
+        IF typeAccionId=4 THEN
+			SET cuenta_v = cuenta_4;
+        END IF;
+        
+        IF typeAccionId=1 THEN
+			SET beneficio_aux = 4;
+        END IF;
+        
+        IF typeAccionId=2 THEN
+			SET beneficio_aux = 1;
+        END IF;
+        
+        IF typeAccionId=3 THEN
+			SET beneficio_aux = 2;
+        END IF;
+        
+        IF typeAccionId=4 THEN
+			SET beneficio_aux = 3;
+        END IF;
+        
+        IF cuenta_v > (SELECT cantidad FROM Limites INNER JOIN BeneficiosXPlanes ON Limites.limiteid=BeneficiosXPlanes.limiteid WHERE planid=plan_actual AND beneficioid=beneficio_aux) THEN
+            SET bandera_error = 1;
+            SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
+        END IF;
+        
         
         START TRANSACTION;
-			select 1;
             -- se inserta la accion
             INSERT INTO Acciones(otrousuario,posttime,IP,`checksum`,tipoaccionid,userid)
             VALUES(otroUsuarioId,curdate(),'172.16.0.0',chequeo,typeAccionId,ID_USUARIO);
@@ -249,10 +319,10 @@ CREATE PROCEDURE REGISTRO(
 )
 	BEGIN
     
-		DECLARE otroUsuarioId INT;
-        DECLARE ID_USUARIO INT;
-        DECLARE typeAccionId TINYINT;
-        DECLARE chequeo VARBINARY(480);
+		DECLARE otroUsuarioId INT DEFAULT NULL;
+        DECLARE ID_USUARIO INT DEFAULT NULL;
+        DECLARE typeAccionId TINYINT DEFAULT NULL;
+        DECLARE chequeo VARBINARY(480) DEFAULT NULL;
         DECLARE chat1 INT;
         DECLARE chat2 INT;
         DECLARE lat FLOAT;
@@ -303,6 +373,8 @@ CREATE PROCEDURE REGISTRO(
         SET lat = (RAND()*90);
 		SET lon = (RAND()*180);
         
+        
+        
         START TRANSACTION;
 			   select 3;
                -- Se agrega una foto para el chat de ambos usuarios
@@ -346,6 +418,9 @@ CALL likes('Cristian','Núñez','Mónica','Guillamon','Quitar Like');
 CALL likes('Emilia','Chinchilla','Mónica','Guillamon','Like');
 CALL likes('Mónica','Guillamon','Emilia','Chinchilla','Like');
 
+CALL likes('Miguel','Gómez','Victoria','Venegas','Like');
+CALL likes('Victoria','Venegas','Miguel','Gómez','Like');
+
 -- Pruebas
 SELECT * FROM Acciones;
 SELECT * FROM Transactions;
@@ -354,8 +429,11 @@ SELECT * FROM Mensajes;
 SELECT * FROM Bitacoras;
 SELECT * FROM Fotos;
 
+SELECT * FROM UsersAccounts;
 
 
+CALL likes('Juan','Casasola','Mónica','Guillamon','Super Like');
+CALL likes('Victoria','Venegas','Manuel','Casasola','jksdgbivSuper Like');
 
 
 
