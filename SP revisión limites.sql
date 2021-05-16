@@ -34,6 +34,16 @@ CREATE PROCEDURE likes(
         DECLARE ApUser2 varchar(100);
         DECLARE TAccion varchar(50);
         DECLARE plan_actual INT;
+        
+        DECLARE cuenta_1 INT;
+        DECLARE cuenta_2 INT;
+        DECLARE cuenta_3 INT;
+        DECLARE cuenta_4 INT;
+        DECLARE cuenta_v INT;
+        
+        DECLARE beneficio_aux INT;
+        DECLARE bandera_error TINYINT;
+        
        -- para manejar los errores 
         
 		DECLARE INVALID_DATA INT DEFAULT(54000);
@@ -42,10 +52,14 @@ CREATE PROCEDURE likes(
 		BEGIN
 			GET DIAGNOSTICS CONDITION 1 @err_no = MYSQL_ERRNO, @message = MESSAGE_TEXT;
 			IF (ISNULL(@message)) THEN -- para las excepciones forzadas
-				SET @message = 'Error al realizar la accion';            
-			ELSE
+				SET @message = 'Error al realizar la accion';  
+            ELSE
 				SET @message = CONCAT('Internal error: ',@message);
 			END IF;
+            
+            IF bandera_error=1 THEN
+				SET @message = 'Ya se ha alcanzado el límite diario de esta acción';
+            END IF;
 			
 			ROLLBACK;  -- si se produjo un error se deben retroceder los datos que se guardaron en la transacción
 			
@@ -74,18 +88,55 @@ CREATE PROCEDURE likes(
 	
        SET chequeo=SHA2(CONCAT(Nusuariobase, CURDATE(), NOtroUsuario, typeAccionId), 256);
 		
-        SET plan_actual = (SELECT )
-        
-       SELECT userid, posttime FROM LikesUsers WHERE LikesUsers.userid=ID_USUARIO AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE());
+	   SET plan_actual = (SELECT Planes.planid FROM Planes INNER JOIN PlansxUser ON Planes.planid=PlansxUser.planid WHERE (PlansxUser.userid=ID_USUARIO AND PlansxUser.actual=1));
        
-       SELECT userid, posttime FROM SuperLikesUsers WHERE LikesUsers.userid=ID_USUARIO AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE());
+       SET cuenta_2 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=2 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
        
+	   SET cuenta_3 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=3 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
+       
+	   SET cuenta_4 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=4 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
+       
+       SET cuenta_1 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=1 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
+
+        IF typeAccionId=1 THEN
+			SET cuenta_v = cuenta_1;
+        END IF;
         
-	   SELECT planid, beneficioid, limiteid FROM BeneficiosXPlanes INNER JOIN LimitesXBeneficio ON BeneficiosXPlanes.beneficioid=LimitesXBeneficio.beneficioid WHERE planid=
+        IF typeAccionId=2 THEN
+			SET cuenta_v = cuenta_2;
+        END IF;
+        
+        IF typeAccionId=3 THEN
+			SET cuenta_v = cuenta_3;
+        END IF;
+        
+        IF typeAccionId=4 THEN
+			SET cuenta_v = cuenta_4;
+        END IF;
+        
+        IF typeAccionId=1 THEN
+			SET beneficio_aux = 4;
+        END IF;
+        
+        IF typeAccionId=2 THEN
+			SET beneficio_aux = 1;
+        END IF;
+        
+        IF typeAccionId=3 THEN
+			SET beneficio_aux = 2;
+        END IF;
+        
+        IF typeAccionId=4 THEN
+			SET beneficio_aux = 3;
+        END IF;
+        
+        IF cuenta_v > (SELECT cantidad FROM Limites INNER JOIN BeneficiosXPlanes ON Limites.limiteid=BeneficiosXPlanes.limiteid WHERE planid=plan_actual AND beneficioid=beneficio_aux) THEN
+            SET bandera_error = 1;
+            SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
+        END IF;
         
         
         START TRANSACTION;
-			select 1;
             -- se inserta la accion
             INSERT INTO Acciones(otrousuario,posttime,IP,`checksum`,tipoaccionid,userid)
             VALUES(otroUsuarioId,curdate(),'172.16.0.0',chequeo,typeAccionId,ID_USUARIO);
@@ -363,3 +414,9 @@ SELECT * FROM Chats;
 SELECT * FROM Mensajes;
 SELECT * FROM Bitacoras;
 SELECT * FROM Fotos;
+
+SELECT * FROM UsersAccounts;
+
+
+CALL likes('Manuel','Casasola','Mónica','Guillamon','Super Like');
+CALL likes('Manuel','Casasola','Victoria','Venegas','jksdgbivSuper Like');

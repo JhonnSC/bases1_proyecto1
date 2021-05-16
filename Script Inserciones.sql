@@ -365,7 +365,7 @@ BEGIN
 	INSERT INTO Limites (name_limite, cantidad)
     VALUES
     ('Infinitos', 1000000000),
-    ('Cero', 0),
+    ('Cero', -1),
     ('Tres', 3),
     ('Cinco', 5),
     ('Diez', 10),
@@ -626,7 +626,7 @@ BEGIN
         (6, 4, 1),
         (7, 4, 1),
         (8, 4, 1);
-        
+       
 END //
 delimiter ;
 
