@@ -12,25 +12,40 @@ BEGIN
 
 	DECLARE id_Idioma_aux smallint DEFAULT NULL;
     
-    IF (idioma='Español') THEN
+    DECLARE INVALID_DATA INT DEFAULT(54500);
 		
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			GET DIAGNOSTICS CONDITION 1 @err_no = MYSQL_ERRNO, @message = MESSAGE_TEXT;
+			
+            SET @message = 'ERROR, el dato ingresado no existe';            
+			
+			RESIGNAL SET MESSAGE_TEXT = @message;
+		END;
+        
+    IF (idioma='Español') THEN
+		  SET id_Idioma_aux=0;
           SELECT titulo  FROM Planes;
     ELSE
 		  SELECT idiomaid INTO id_Idioma_aux FROM Idiomas WHERE name_idioma=idioma;
     
     END IF;
     
-    IF (id_Idioma_aux=1) THEN
-		
-        SELECT caption FROM PlanesInglés;
+    IF (id_Idioma_aux=1 OR id_Idioma_aux=0 OR id_Idioma_aux=4) THEN
+			IF (id_Idioma_aux=1) THEN
+				
+				SELECT caption FROM PlanesInglés;
+			
+			END IF;
+			
+			IF (id_Idioma_aux=4) THEN
+				select caption from PlanesFrances;
+			
+			END IF;
 	
+    ELSE    -- se genera un error
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
     END IF;
-    
-    IF (id_Idioma_aux=4) THEN
-        select caption from PlanesFrances;
-    
-    END IF;
-
 END//
 
 DELIMITER ;
@@ -38,7 +53,7 @@ DELIMITER ;
 CALL IdiomaPlanes('English');
 CALL IdiomaPlanes('Français');
 CALL IdiomaPlanes('Español');
-
+CALL IdiomaPlanes('Aleman');
 
 -- SP2 --> se ingresa el idioma en el que se quieren ver los intereses de cada usuario
 DROP PROCEDURE IF EXISTS IdiomaIntereses
@@ -50,23 +65,41 @@ BEGIN
 
 	DECLARE id_Idioma_aux smallint DEFAULT NULL;
     
+    DECLARE INVALID_DATA INT DEFAULT(54500);
+		
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			GET DIAGNOSTICS CONDITION 1 @err_no = MYSQL_ERRNO, @message = MESSAGE_TEXT;
+			
+            SET @message = 'ERROR, el dato ingresado no existe';            
+			
+			RESIGNAL SET MESSAGE_TEXT = @message;
+		END;
+        
     IF (idioma='Español') THEN
+		  SET id_Idioma_aux=0;
           SELECT name_interes  FROM InteresesDeUsuario;
     ELSE
 		  SELECT idiomaid INTO id_Idioma_aux FROM Idiomas WHERE name_idioma=idioma;
     
     END IF;
     
-    IF (id_Idioma_aux=1) THEN
-		
-        SELECT caption FROM InteresesUsuariosInglés;
+    IF (id_Idioma_aux=1 OR id_Idioma_aux=0 OR id_Idioma_aux=4) THEN
+			IF (id_Idioma_aux=1) THEN
+				
+				SELECT caption FROM InteresesUsuariosInglés;
+			
+			END IF;
+			
+			IF (id_Idioma_aux=4) THEN
+				SELECT caption FROM InteresesUsuariosFrances;
+			
+			END IF;
 	
+    ELSE    -- se genera un error
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
     END IF;
-    
-    IF (id_Idioma_aux=4) THEN
-        SELECT caption FROM InteresesUsuariosFrances;
-    
-    END IF;
+
 END//
 
 DELIMITER ;
@@ -74,6 +107,7 @@ DELIMITER ;
 CALL IdiomaIntereses('English');
 CALL IdiomaIntereses('Français');
 CALL IdiomaIntereses('Español');
+CALL IdiomaIntereses('Aleman');
 
 
 -- SP3 --> revisa los planes actuales o los planes utilizados en el pasado. 
@@ -84,6 +118,17 @@ DELIMITER //
 CREATE PROCEDURE VerUsoPlanes( ESTADO varchar(100))
 BEGIN
 	
+    DECLARE INVALID_DATA INT DEFAULT(54500);
+		
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			GET DIAGNOSTICS CONDITION 1 @err_no = MYSQL_ERRNO, @message = MESSAGE_TEXT;
+			
+            SET @message = 'ERROR, el dato ingresado no existe';            
+			
+			RESIGNAL SET MESSAGE_TEXT = @message;
+		END;
+        
     IF ( ESTADO='Actual' or ESTADO='Usados') THEN 
 		
         IF ( ESTADO='Actual') THEN 
@@ -93,8 +138,8 @@ BEGIN
 		END IF;
         
     ELSE
-        -- se imprime un error
-        SELECT 'ERROR';
+         -- se genera un error
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
         
 	END IF;
 
@@ -115,6 +160,17 @@ DELIMITER //
 CREATE PROCEDURE VerPagos( estado varchar(100))
 BEGIN
 	
+    DECLARE INVALID_DATA INT DEFAULT(54500);
+		
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			GET DIAGNOSTICS CONDITION 1 @err_no = MYSQL_ERRNO, @message = MESSAGE_TEXT;
+			
+            SET @message = 'ERROR, el dato ingresado no existe';            
+			
+			RESIGNAL SET MESSAGE_TEXT = @message;
+		END;
+        
 	IF ( ESTADO='Aceptado' or ESTADO='Rechazado') THEN 
 		
         IF ( ESTADO='Aceptado') THEN 
@@ -126,8 +182,8 @@ BEGIN
 		END IF;
         
     ELSE
-        -- se imprime un error
-        SELECT 'ERROR';
+         -- se genera un error
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
         
 	END IF;
     
