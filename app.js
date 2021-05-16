@@ -2,8 +2,11 @@ const express = require('express')
 const app = express()
 const mysql = require('mysql2')
 const morgan = require('morgan')
+var bodyParser = require('body-parser')
+
 
 app.use(express.static('./public'))
+app.use(morgan('short'))
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -28,10 +31,14 @@ app.get("/", (req,res)=> {
 
 
 })
+
+app.use(express.json()) 
+app.use(express.urlencoded({ extended: false }))
 const router2= require("./routes/user")
 const router = require("./routes/Storeprocedures")
 app.use(router)
 app.use(router2)
+
 
 // crear 
 app.listen(5000,()=> {
