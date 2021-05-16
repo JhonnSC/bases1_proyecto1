@@ -90,47 +90,9 @@ CREATE PROCEDURE likes(
 		
 	   SET plan_actual = (SELECT Planes.planid FROM Planes INNER JOIN PlansxUser ON Planes.planid=PlansxUser.planid WHERE (PlansxUser.userid=ID_USUARIO AND PlansxUser.actual=1));
        
-       SET cuenta_2 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=2 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
-       
-	   SET cuenta_3 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=3 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
-       
-	   SET cuenta_4 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=4 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
-       
-       SET cuenta_1 = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=1 AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
-
-        IF typeAccionId=1 THEN
-			SET cuenta_v = cuenta_1;
-        END IF;
+       SET cuenta_v = (SELECT COUNT(userid) FROM Acciones WHERE Acciones.userid=ID_USUARIO AND Acciones.tipoaccionid=typeAccionId AND (posttime BETWEEN (SELECT (CURDATE() - INTERVAL 1 DAY)) AND CURDATE()));
         
-        IF typeAccionId=2 THEN
-			SET cuenta_v = cuenta_2;
-        END IF;
-        
-        IF typeAccionId=3 THEN
-			SET cuenta_v = cuenta_3;
-        END IF;
-        
-        IF typeAccionId=4 THEN
-			SET cuenta_v = cuenta_4;
-        END IF;
-        
-        IF typeAccionId=1 THEN
-			SET beneficio_aux = 4;
-        END IF;
-        
-        IF typeAccionId=2 THEN
-			SET beneficio_aux = 1;
-        END IF;
-        
-        IF typeAccionId=3 THEN
-			SET beneficio_aux = 2;
-        END IF;
-        
-        IF typeAccionId=4 THEN
-			SET beneficio_aux = 3;
-        END IF;
-        
-        IF cuenta_v > (SELECT cantidad FROM Limites INNER JOIN BeneficiosXPlanes ON Limites.limiteid=BeneficiosXPlanes.limiteid WHERE planid=plan_actual AND beneficioid=beneficio_aux) THEN
+        IF cuenta_v > (SELECT cantidad FROM Limites INNER JOIN BeneficiosXPlanes ON Limites.limiteid=BeneficiosXPlanes.limiteid WHERE planid=plan_actual AND beneficioid=typeAccionId) THEN
             SET bandera_error = 1;
             SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = INVALID_DATA;
         END IF;
@@ -405,7 +367,7 @@ CALL likes('Cristian','Núñez','Mónica','Guillamon','Quitar Like');
 
 
 CALL likes('Emilia','Chinchilla','Mónica','Guillamon','Like');
-CALL likes('Mónica','Guillamon','Emilia','Chinchilla','Like');
+CALL likes('Mónica','Guillamon','Emilia','Chinchilla','Super Like');
 
 -- Pruebas
 SELECT * FROM Acciones;

@@ -99,10 +99,10 @@ CREATE PROCEDURE InsertarTiposAcciones()
 BEGIN
 	INSERT INTO Tipoacciones (name_tipoaccion)
     VALUES 
-    ('Descarte'),
     ('Like'),
     ('Super Like'),
-    ('Quitar Like');
+    ('Quitar Like'),
+    ('Descartar Persona');
 END //
 delimiter ;
 
@@ -726,10 +726,10 @@ BEGIN
     ('TRD-ENUS-05', 'Male', 1, 2, 2),
     ('TRD-ENUS-06', 'Female', 2, 2, 2),
     ('TRD-ENUS-07', 'Non Binary', 3, 2, 2),
-    ('TRD-ENUS-08', 'Discard', 1, 2, 3),
-    ('TRD-ENUS-09', 'Like', 2, 2, 3),
-    ('TRD-ENUS-10', 'Super Like', 3, 2, 3),
-    ('TRD-ENUS-11', 'Remove Like', 4, 2, 3),
+    ('TRD-ENUS-08', 'Discard', 4, 2, 3),
+    ('TRD-ENUS-09', 'Like', 1, 2, 3),
+    ('TRD-ENUS-10', 'Super Like', 2, 2, 3),
+    ('TRD-ENUS-11', 'Remove Like', 3, 2, 3),
     ('TRD-ENUS-12', 'Accepted', 1, 2, 4),
     ('TRD-ENUS-13', 'Rejected', 2, 2, 4),
     ('TRD-ENUS-14', 'In progress', 3, 2, 4),
@@ -836,10 +836,10 @@ BEGIN
     ('TRD-ESESP-05', 'Masculino', 1, 2, 2),
     ('TRD-ESESP-06', 'Femenino', 2, 2, 2),
     ('TRD-ESESP-07', 'No Binario', 3, 2, 2),
-    ('TRD-ESESP-08', 'Descarte', 1, 2, 3),
-    ('TRD-ESESP-09', 'Me flipa', 2, 2, 3),
-    ('TRD-ESESP-10', 'Me super flipa', 3, 2, 3),
-    ('TRD-ESESP-11', 'Ya no me flipa', 4, 2, 3),
+    ('TRD-ESESP-08', 'Descarte', 4, 2, 3),
+    ('TRD-ESESP-09', 'Me flipa', 1, 2, 3),
+    ('TRD-ESESP-10', 'Me super flipa', 2, 2, 3),
+    ('TRD-ESESP-11', 'Ya no me flipa', 3, 2, 3),
     ('TRD-ESESP-12', 'Aceptado', 1, 2, 4),
     ('TRD-ESESP-13', 'Rechazado', 2, 2, 4),
     ('TRD-ESESP-14', 'En Tránsito', 3, 2, 4),
@@ -938,7 +938,7 @@ BEGIN
     ('TRD-ESESP-107', 'Usuario', 1, 2, 12),
     ('TRD-ESESP-108', 'Adminitrador', 2, 2, 12),
     ('TRD-ESESP-109', 'Desconocido', 3, 2, 12),
-    -- ESPAÑOL COSTA RICA
+    -- ESPAÑOL COSTA RICA 
     ('TRD-ESCRC-01', 'Inglés', 1, 3, 1),
     ('TRD-ESCRC-02', 'Español', 2, 3, 1),
     ('TRD-ESCRC-03', 'Español', 3, 3, 1),
@@ -946,10 +946,10 @@ BEGIN
     ('TRD-ESCRC-05', 'Masculino', 1, 3, 2),
     ('TRD-ESCRC-06', 'Femenino', 2, 3, 2),
     ('TRD-ESCRC-07', 'No Binario', 3, 3, 2),
-    ('TRD-ESCRC-08', 'Descarte', 1, 3, 3),
-    ('TRD-ESCRC-09', 'Me gusta', 2, 3, 3),
-    ('TRD-ESCRC-10', 'Me super gusta', 3, 3, 3),
-    ('TRD-ESCRC-11', 'Ya no me gusta', 4, 3, 3),
+    ('TRD-ESCRC-08', 'Descarte', 4, 3, 3),
+    ('TRD-ESCRC-09', 'Me gusta', 1, 3, 3),
+    ('TRD-ESCRC-10', 'Me super gusta', 2, 3, 3),
+    ('TRD-ESCRC-11', 'Ya no me gusta', 3, 3, 3),
     ('TRD-ESCRC-12', 'Aceptado', 1, 3, 4),
     ('TRD-ESCRC-13', 'Rechazado', 2, 3, 4),
     ('TRD-ESCRC-14', 'En Tránsito', 3, 3, 4),
@@ -1056,10 +1056,10 @@ BEGIN
     ('TRD-FRFR-05', 'Masculin', 1, 4, 2),
     ('TRD-FRFR-06', 'Féminin', 2, 4, 2),
     ('TRD-FRFR-07', 'Pas Binaire', 3, 4, 2),
-    ('TRD-FRFR-08', 'Jeter', 1, 4, 3),
-    ('TRD-FRFR-09', 'Aimer', 2, 4, 3),
-    ('TRD-FRFR-10', 'Super Aimer', 3, 4, 3),
-    ('TRD-FRFR-11', 'Supprimer Aimer', 4, 4, 3),
+    ('TRD-FRFR-08', 'Jeter', 4, 4, 3),
+    ('TRD-FRFR-09', 'Aimer', 1, 4, 3),
+    ('TRD-FRFR-10', 'Super Aimer', 2, 4, 3),
+    ('TRD-FRFR-11', 'Supprimer Aimer', 3, 4, 3),
     ('TRD-FRFR-12', 'Accepté', 1, 4, 4),
     ('TRD-FRFR-13', 'Rejeté', 2, 4, 4),
     ('TRD-FRFR-14', 'En Transit', 3, 4, 4),
