@@ -592,64 +592,41 @@ delimiter //
 
 CREATE PROCEDURE InsertarPlanesXBeneficios()
 BEGIN 
-
-    DECLARE beneficio INT;
-    DECLARE maxbeneficio INT;
-    DECLARE plan INT;
-    
-    SET beneficio = 1;
-    SET plan = 1;
-    SET maxbeneficio = (SELECT MAX(beneficioid) FROM Beneficios);
-    ciclo: LOOP
-    
-		IF plan = (SELECT MAX(planid) FROM Planes)+1 THEN
-			LEAVE ciclo;
-		END IF;
-    
-		WHILE beneficio <= maxbeneficio DO
-		INSERT INTO BeneficiosXPlanes(planid, beneficioid)
+		INSERT INTO BeneficiosXPlanes(planid, beneficioid, limiteid)
 		VALUES 
-		(plan, beneficio);
-		SET beneficio = beneficio+1;
-        END WHILE;
+		(1, 1, 5),
+		(2, 1, 6),
+        (3, 1, 6),
+        (4, 1, 7),
+        (5, 1, 7),
+        (6, 1, 1),
+        (7, 1, 1),
+        (8, 1, 6),
+        (1, 2, 2),
+        (2, 2, 4),
+        (3, 2, 4),
+        (4, 2, 5),
+        (5, 2, 5),
+        (6, 2, 1),
+        (7, 2, 1),
+        (8, 2, 5),
+        (1, 3, 2),
+        (2, 3, 3),
+        (3, 3, 3),
+        (4, 3, 4),
+        (5, 3, 4),
+        (6, 3, 5),
+        (7, 3, 5),
+        (8, 3, 3),
+        (1, 4, 9),
+        (2, 4, 1),
+        (3, 4, 1),
+        (4, 4, 1),
+        (5, 4, 1),
+        (6, 4, 1),
+        (7, 4, 1),
+        (8, 4, 1);
         
-        SET beneficio = 1;
-		SET plan = plan+1;
-        
-    END LOOP ciclo;
-END //
-delimiter ;
-
-DROP PROCEDURE IF EXISTS InsertarLimitesXBeneficio;
-delimiter //
-
-CREATE PROCEDURE InsertarLimitesXBeneficio()
-BEGIN
-	
-    DECLARE beneficio INT;
-    DECLARE maxbeneficio INT;
-    DECLARE limite INT;
-    
-    SET beneficio = 1;
-    SET limite = 1;
-    SET maxbeneficio = (SELECT MAX(beneficioid) FROM Beneficios);
-    ciclo: LOOP
-    
-		IF limite = (SELECT MAX(limiteid) FROM Limites)+1 THEN
-			LEAVE ciclo;
-		END IF;
-    
-		WHILE beneficio <= maxbeneficio DO
-		INSERT INTO LimitesXBeneficio(beneficioid, limiteid)
-		VALUES 
-		(beneficio, limite);
-		SET beneficio = beneficio+1;
-        END WHILE;
-        
-        SET beneficio = 1;
-		SET limite = limite+1;
-        
-    END LOOP ciclo;
 END //
 delimiter ;
 
@@ -1213,7 +1190,6 @@ BEGIN
     CALL InsertarPerfilesBusqueda();
     CALL InsertarFotos();
     CALL InsertarPlanesXBeneficios();
-    CALL InsertarLimitesXBeneficio();
     CALL InsertarTiposBitacora();
     CALL InsertarSeveridad();
     CALL InsertarEntityTypes();
@@ -1248,7 +1224,6 @@ DROP PROCEDURE IF EXISTS InsertarCategoriasXUsers;
 DROP PROCEDURE IF EXISTS InsertarPerfilesBusqueda;
 DROP PROCEDURE IF EXISTS InsertarFotos;
 DROP PROCEDURE IF EXISTS InsertarPlanesXBeneficios;
-DROP PROCEDURE IF EXISTS InsertarLimitesXBeneficio;
 DROP PROCEDURE IF EXISTS InsertarTiposBitacora;
 DROP PROCEDURE IF EXISTS InsertarSeveridad;
 DROP PROCEDURE IF EXISTS InsertarEntityTypes;

@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2021-05-15 15:52
+-- Generated: 2021-05-15 22:59
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -407,7 +407,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transactions` (
   `userid` INT(11) NOT NULL,
   PRIMARY KEY (`Transactionid`),
   INDEX `fk_Transactions_contexts1_idx` (`contextid` ASC),
-  INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC),
+  INDEX `fk_Transactions_TransTypes1_idx` (`transtypesid` ASC), 
   INDEX `fk_Transactions_UsersAccounts1_idx` (`userid` ASC),
   CONSTRAINT `fk_Transactions_contexts1`
     FOREIGN KEY (`contextid`)
@@ -470,24 +470,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Limites` (
   `name_limite` VARCHAR(100) NOT NULL,
   `cantidad` INT(11) NOT NULL,
   PRIMARY KEY (`limiteid`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`LimitesXBeneficio` (
-  `beneficioid` INT(11) NOT NULL,
-  `limiteid` INT(11) NOT NULL,
-  INDEX `fk_LimitesXBeneficio_Beneficios1_idx` (`beneficioid` ASC),
-  INDEX `fk_LimitesXBeneficio_Limites1_idx` (`limiteid` ASC),
-  CONSTRAINT `fk_LimitesXBeneficio_Beneficios1`
-    FOREIGN KEY (`beneficioid`)
-    REFERENCES `mydb`.`Beneficios` (`beneficioid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_LimitesXBeneficio_Limites1`
-    FOREIGN KEY (`limiteid`)
-    REFERENCES `mydb`.`Limites` (`limiteid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -578,8 +560,10 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `mydb`.`BeneficiosXPlanes` (
   `planid` INT(11) NOT NULL,
   `beneficioid` INT(11) NOT NULL,
+  `limiteid` INT(11) NOT NULL,
   INDEX `fk_BeneficiosXPlanes_Planes1_idx` (`planid` ASC),
   INDEX `fk_BeneficiosXPlanes_Beneficios1_idx` (`beneficioid` ASC),
+  INDEX `fk_BeneficiosXPlanes_Limites1_idx` (`limiteid` ASC),
   CONSTRAINT `fk_BeneficiosXPlanes_Planes1`
     FOREIGN KEY (`planid`)
     REFERENCES `mydb`.`Planes` (`planid`)
@@ -589,6 +573,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`BeneficiosXPlanes` (
     FOREIGN KEY (`beneficioid`)
     REFERENCES `mydb`.`Beneficios` (`beneficioid`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_BeneficiosXPlanes_Limites1`
+    FOREIGN KEY (`limiteid`)
+    REFERENCES `mydb`.`Limites` (`limiteid`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -597,3 +586,4 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
