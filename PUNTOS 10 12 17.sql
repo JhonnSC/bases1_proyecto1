@@ -42,7 +42,7 @@ t0.nombre, t1.nombre,
 (
     SELECT count(*)
     FROM UsersXCategorias c0
-    WHERE c0.categoriaid in (
+    WHERE c0.userid = t0.userid and c0.categoriaid in (
         SELECT c1.categoriaid
         FROM UsersXCategorias c1
         WHERE c1.userid = t1.userid 
