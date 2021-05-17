@@ -1,0 +1,6 @@
+com/example/finderapiapp/BuildConfig.java
+ com.example.finderapiapp.BuildConfig
+com/example/finderapiapp/MainActivity.java
+ com.example.finderapiapp.MainActivity
+ com.example.finderapiapp.MainActivity$1
+ com.example.finderapiapp.MainActivity$1$SendDeviceDetails
