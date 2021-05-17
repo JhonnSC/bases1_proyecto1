@@ -1,9 +1,10 @@
-const { json } = require('express')
 const express = require('express')
 const router = express.Router()
 const mysql = require('mysql2')
 var app = express()
-app.use(express.json());
+app.use(express.json()) 
+app.use(express.urlencoded({ extended: false }))    
+
 var matriz = []
 function separar(str){
     var inicio= 0
@@ -25,24 +26,31 @@ function separar(str){
     }
 }
 
-
- 
-router.post("/storedprocedures", (req,res) => {
-    console.log("Usando un SP") 
-
-    app.use(express.json());
-    var nombreSP = ''
-    var argumentos = ''
-    nombreSP = req.body.nombreSP;
-    argumentos = req.body.argumentos;
-    console.log(nombreSP)
-    console.log(req.body.argumentos)
-    
+console.log("Usando un SP") 
+console.log("Usando un SP") 
+router.get("/usar_sp", (req,res) => {
+    console.log("Entro") 
+    //var plan = '5000,colones,1234,Plan_Premium_2.0_(Mensual),Mónica,Guillamon,Paypal,Débito'   
+   var storeprocedure = ''
+   var argumentos = ''
+    console.log("3")
+    console.log('1')
+    console.log(storeprocedure)
+    console.log('2')
     separar(argumentos)
-
-
+    storeprocedure = req.body.nombreSP
+    argumentos = req.body.argumentos
+    //console.log(matriz[0])
+    //console.log(matriz[1])
+    //console.log(matriz[2])
+    //console.log(matriz[3])
+    //console.log(matriz[4])
+    //console.log(matriz[5])
+    //console.log(matriz[6])
+    //console.log(matriz[7])
     
-    if(nombreSP== 'obtenerPlan'){
+    //connection.query('call obtenerPlan(?,?,?,?,?,?,?,?)',[[matriz[0]],[matriz[1]],[matriz[2]],[matriz[3]],[matriz[4]],[matriz[5]],[matriz[6]],[matriz[7]]],(err,results,fields)=>{    
+    if(storeprocedure== 'obtenerPlan'){
         connection.query('call obtenerPlan(?,?,?,?,?,?,?,?)',[[matriz[0]],[matriz[1]],[matriz[2]],[matriz[3]],[matriz[4]],[matriz[5]],[matriz[6]],[matriz[7]]],(err,results,fields)=>{     
             if(err){
                 console.log('Failed to query'+ err)
@@ -50,32 +58,13 @@ router.post("/storedprocedures", (req,res) => {
                 connection.end()
                 return 
 
-            }
+      } 
             console.log('Sirvio esta vara')
             console.log(results)
-            res.json("Hola")
+           res.json("Hola")
         })
-        
+        connection.end()
     }
-
-    if(nombreSP== 'CambiosCuenta'){
-        connection.query('call CambiosCuenta(?,?,?)',[[matriz[0]],[matriz[1]],[matriz[2]]],(err,results,fields)=>{     
-            if(err){
-                console.log('Failed to query'+ err)
-                res.sendStatus(500)
-                connection.end()
-                return 
-
-            }
-            console.log('Sirvio esta vara')
-            console.log(results)
-            res.json("Hola")
-        })
-        
-    }
-
-
-
 })
 
 

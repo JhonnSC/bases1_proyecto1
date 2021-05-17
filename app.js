@@ -2,8 +2,9 @@ const express = require('express')
 const app = express()
 const mysql = require('mysql2')
 const morgan = require('morgan')
-var bodyParser = require('body-parser')
 
+app.use(express.json()) 
+app.use(express.urlencoded({ extended: false }))  
 
 app.use(express.static('./public'))
 app.use(morgan('short'))
@@ -32,13 +33,15 @@ app.get("/", (req,res)=> {
 
 })
 
-app.use(express.json()) 
-app.use(express.urlencoded({ extended: false }))
-const router2= require("./routes/user")
-const router = require("./routes/Storeprocedures")
+
+const router= require("./routes/user")
+const router2 = require("./routes/Storeproceduresviejo")
+const router3 = require('./routes/Storeprocedures')
+app.use(router3)
 app.use(router)
 app.use(router2)
-
+app.use(express.json()) 
+app.use(express.urlencoded({ extended: false }))  
 
 // crear 
 app.listen(5000,()=> {

@@ -3,7 +3,7 @@ const router = express.Router()
 const mysql = require('mysql2')
 
 
-router.post("/user/:userid", (req,res) => {
+router.get("/user/:userid", (req,res) => {
     console.log("Buscando user con la id:" + req.params.userid)
     const userId = req.params.id
     const queryString = 'SELECT * FROM UsersAccounts WHERE userid = 1'
