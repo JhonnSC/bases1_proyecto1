@@ -50,7 +50,7 @@ t0.nombre, t1.nombre,
 ) AS 'Compatible'
 FROM
     UsersAccounts t0, UsersAccounts t1 
-WHERE t0.userid <> t1.userid;
+WHERE t0.userid < t1.userid;
 
 -- volumen de uso 
 DROP PROCEDURE IF EXISTS Volumen;
