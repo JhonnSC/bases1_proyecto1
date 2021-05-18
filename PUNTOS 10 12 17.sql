@@ -24,8 +24,8 @@ call CantidadUsersXAccion();
 -- frecuencia de uso de categorias
 SELECT UsersXCategorias.categoriaid,Categorias.name_categoria,
 CASE
-   WHEN 350 < count(*)  THEN 'Muy usada'
-WHEN 300 < count(*) AND count(*) < 350 THEN 'Medio usada'
+   WHEN 8 < count(*)  THEN 'Muy usada'
+WHEN 4 < count(*) AND count(*) < 8 THEN 'Medio usada'
 ELSE 'Poco usada'
 END AS 'Frecuencia'
 ,COUNT(*)
